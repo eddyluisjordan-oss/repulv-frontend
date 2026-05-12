@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RepuLV — AI Review Management for Las Vegas Businesses</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c96a;
+    --gold-dim: #8a6e2f;
+    --black: #080808;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: #2a2a2a;
+    --text: #e8e4dc;
+    --muted: #777;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    padding: 20px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: linear-gradient(to bottom, rgba(8,8,8,0.95), transparent);
+    backdrop-filter: blur(10px);
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; font-weight: 900;
+    letter-spacing: -0.5px;
+    color: var(--gold);
+  }
+
+  .logo span { color: var(--text); }
+
+  nav ul { list-style: none; display: flex; gap: 36px; }
+  nav ul a {
+    color: var(--muted); text-decoration: none;
+    font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  nav ul a:hover { color: var(--gold); }
+
+  .nav-cta {
+    background: var(--gold); color: var(--black) !important;
+    padding: 10px 22px; border-radius: 2px;
+    font-weight: 500 !important; letter-spacing: 1px !important;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--gold-light) !important; color: var(--black) !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 120px 48px 80px;
+    position: relative; overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 70% 50%, rgba(201,168,76,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 60%);
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
+  }
+
+  .hero-content { position: relative; z-index: 1; max-width: 760px; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--gold-dim); border-radius: 2px;
+    padding: 6px 14px; margin-bottom: 32px;
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold);
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .badge-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(48px, 6vw, 86px);
+    font-weight: 900; line-height: 1.0;
+    letter-spacing: -2px; margin-bottom: 28px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .hero h1 em {
+    font-style: italic; color: var(--gold);
+    display: block;
+  }
+
+  .hero p {
+    font-size: 18px; line-height: 1.7;
+    color: #aaa; max-width: 520px;
+    margin-bottom: 44px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex; gap: 16px; align-items: center;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--gold); color: var(--black);
+    padding: 16px 36px; border: none; border-radius: 2px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
+    cursor: pointer; text-decoration: none;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  .btn-ghost {
+    background: transparent; color: var(--text);
+    padding: 16px 36px; border: 1px solid var(--border); border-radius: 2px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    cursor: pointer; text-decoration: none;
+    transition: all 0.2s; display: inline-block;
+  }
+  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* STATS STRIP */
+  .stats {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 48px;
+    display: flex; gap: 0;
+  }
+
+  .stat {
+    flex: 1; padding: 0 40px;
+    border-right: 1px solid var(--border);
+  }
+  .stat:first-child { padding-left: 0; }
+  .stat:last-child { border-right: none; }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px; font-weight: 900;
+    color: var(--gold); line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-label { font-size: 12px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+
+  /* PROBLEM */
+  .section { padding: 100px 48px; }
+
+  .section-tag {
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 700; line-height: 1.15;
+    letter-spacing: -1px; margin-bottom: 20px;
+  }
+
+  .section-sub {
+    font-size: 17px; color: #888; line-height: 1.7;
+    max-width: 540px; margin-bottom: 60px;
+  }
+
+  .problem-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: var(--border); border: 1px solid var(--border);
+  }
+
+  .problem-card {
+    background: var(--surface);
+    padding: 36px 32px;
+    transition: background 0.2s;
+  }
+  .problem-card:hover { background: var(--surface2); }
+
+  .problem-icon {
+    font-size: 28px; margin-bottom: 16px;
+  }
+
+  .problem-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; margin-bottom: 12px; font-weight: 700;
+  }
+
+  .problem-card p { font-size: 14px; color: #777; line-height: 1.7; }
+
+  /* HOW IT WORKS */
+  .how-section {
+    padding: 100px 48px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 60px; }
+
+  .step {
+    padding: 32px 28px;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+  .step:last-child { border-right: none; }
+
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 64px; font-weight: 900;
+    color: var(--border); line-height: 1;
+    margin-bottom: 16px;
+    transition: color 0.3s;
+  }
+  .step:hover .step-num { color: var(--gold-dim); }
+
+  .step h3 {
+    font-size: 16px; font-weight: 500;
+    margin-bottom: 10px; color: var(--text);
+    letter-spacing: 0.5px;
+  }
+
+  .step p { font-size: 13px; color: #666; line-height: 1.7; }
+
+  .step-badge {
+    display: inline-block; margin-bottom: 12px;
+    background: rgba(201,168,76,0.1); border: 1px solid var(--gold-dim);
+    color: var(--gold); font-size: 10px; letter-spacing: 2px;
+    text-transform: uppercase; padding: 3px 10px; border-radius: 2px;
+  }
+
+  /* PRICING */
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    margin-top: 60px;
+  }
+
+  .pricing-card {
+    border: 1px solid var(--border);
+    padding: 40px 36px;
+    position: relative;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .pricing-card:hover { border-color: var(--gold-dim); transform: translateY(-4px); }
+
+  .pricing-card.featured {
+    border-color: var(--gold);
+    background: linear-gradient(160deg, rgba(201,168,76,0.06) 0%, transparent 60%);
+  }
+
+  .featured-badge {
+    position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+    background: var(--gold); color: var(--black);
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    padding: 4px 16px; font-weight: 500;
+  }
+
+  .plan-name {
+    font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 16px;
+  }
+
+  .plan-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px; font-weight: 900; color: var(--text);
+    line-height: 1; margin-bottom: 4px;
+  }
+
+  .plan-price span { font-size: 20px; color: var(--muted); }
+  .plan-period { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+
+  .plan-features { list-style: none; margin-bottom: 32px; }
+  .plan-features li {
+    font-size: 14px; color: #aaa; padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .plan-features li::before { content: '✦'; color: var(--gold); font-size: 8px; }
+
+  /* TESTIMONIALS */
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    margin-top: 60px;
+  }
+
+  .testimonial {
+    border: 1px solid var(--border); padding: 32px 28px;
+    transition: border-color 0.2s;
+  }
+  .testimonial:hover { border-color: var(--gold-dim); }
+
+  .stars { color: var(--gold); font-size: 14px; margin-bottom: 16px; letter-spacing: 2px; }
+
+  .testimonial p {
+    font-size: 15px; line-height: 1.7; color: #bbb;
+    font-style: italic; margin-bottom: 20px;
+  }
+
+  .testimonial-author { font-size: 13px; color: var(--muted); }
+  .testimonial-author strong { color: var(--text); display: block; margin-bottom: 2px; }
+
+  /* CONTACT */
+  .contact-section {
+    padding: 100px 48px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+  }
+
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+    max-width: 960px;
+  }
+
+  .contact-info h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px; font-weight: 700;
+    line-height: 1.2; margin-bottom: 20px;
+    letter-spacing: -1px;
+  }
+
+  .contact-info p { font-size: 16px; color: #888; line-height: 1.7; margin-bottom: 36px; }
+
+  .contact-detail {
+    display: flex; gap: 14px; align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .contact-detail-icon {
+    width: 36px; height: 36px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+
+  .contact-detail-text { font-size: 14px; color: #888; }
+  .contact-detail-text strong { display: block; color: var(--text); margin-bottom: 2px; }
+
+  .form-group { margin-bottom: 20px; }
+
+  .form-group label {
+    display: block; font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%; background: var(--black);
+    border: 1px solid var(--border); border-radius: 2px;
+    padding: 14px 16px; color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    transition: border-color 0.2s; outline: none;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--gold); }
+
+  .form-group textarea { height: 100px; resize: vertical; }
+  .form-group select option { background: #111; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* FOOTER */
+  footer {
+    padding: 40px 48px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 900; color: var(--gold);
+  }
+
+  footer p { font-size: 12px; color: var(--muted); }
+
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-size: 12px; color: var(--muted); text-decoration: none; }
+  .footer-links a:hover { color: var(--gold); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-up {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  /* SCROLLING TICKER */
+  .ticker {
+    background: var(--gold); padding: 10px 0;
+    overflow: hidden; white-space: nowrap;
+  }
+
+  .ticker-inner {
+    display: inline-block;
+    animation: ticker 25s linear infinite;
+  }
+
+  .ticker-inner span {
+    font-size: 12px; font-weight: 500; color: var(--black);
+    letter-spacing: 3px; text-transform: uppercase;
+    padding: 0 32px;
+  }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    nav ul { display: none; }
+    .hero { padding: 100px 20px 60px; }
+    .stats { padding: 24px 20px; flex-wrap: wrap; }
+    .stat { padding: 16px 20px; border-right: none; border-bottom: 1px solid var(--border); flex: 1 1 50%; }
+    .section, .how-section, .contact-section { padding: 60px 20px; }
+    .problem-grid, .steps, .pricing-grid, .testimonials-grid { grid-template-columns: 1fr; }
+    .step { border-right: none; border-bottom: 1px solid var(--border); }
+    .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Repu<span>LV</span></div>
+  <ul>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact" class="nav-cta">Get Started</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <div class="badge-dot"></div>
+      Now serving Las Vegas businesses
+    </div>
+    <h1>
+      Your reviews,
+      <em>on autopilot.</em>
+    </h1>
+    <p>RepuLV uses AI to monitor, respond to, and generate 5-star reviews for your Las Vegas business — 24/7, completely automated. You focus on running your business. We handle your reputation.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Start Free Trial</a>
+      <a href="#how" class="btn-ghost">See How It Works</a>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span>★ Google Reviews</span>
+    <span>★ Yelp</span>
+    <span>★ TripAdvisor</span>
+    <span>★ Facebook</span>
+    <span>★ Automated Responses</span>
+    <span>★ Review Requests</span>
+    <span>★ Reputation Monitoring</span>
+    <span>★ Weekly Reports</span>
+    <span>★ Google Reviews</span>
+    <span>★ Yelp</span>
+    <span>★ TripAdvisor</span>
+    <span>★ Facebook</span>
+    <span>★ Automated Responses</span>
+    <span>★ Review Requests</span>
+    <span>★ Reputation Monitoring</span>
+    <span>★ Weekly Reports</span>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat fade-up">
+    <div class="stat-num">94%</div>
+    <div class="stat-label">of customers read reviews before visiting</div>
+  </div>
+  <div class="stat fade-up">
+    <div class="stat-num">3.7×</div>
+    <div class="stat-label">more revenue for businesses with 4+ stars</div>
+  </div>
+  <div class="stat fade-up">
+    <div class="stat-num">89%</div>
+    <div class="stat-label">of negative reviews go unanswered</div>
+  </div>
+  <div class="stat fade-up">
+    <div class="stat-num">$0</div>
+    <div class="stat-label">effort from you after setup</div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="section">
+  <div class="section-tag">The Problem</div>
+  <h2 class="section-title">Your reputation is<br>leaking money every day.</h2>
+  <p class="section-sub">Las Vegas runs on reviews. A single unanswered 1-star can cost you dozens of customers. Most owners know this — but nobody has time to manage it.</p>
+
+  <div class="problem-grid">
+    <div class="problem-card fade-up">
+      <div class="problem-icon">😤</div>
+      <h3>Negative Reviews Ignored</h3>
+      <p>89% of bad reviews never get a response. Potential customers see that silence and walk away. Every unanswered complaint is lost revenue.</p>
+    </div>
+    <div class="problem-card fade-up">
+      <div class="problem-icon">🕐</div>
+      <h3>No Time to Ask for Reviews</h3>
+      <p>Happy customers leave and never write a review unless asked. But following up manually is tedious work you never get to.</p>
+    </div>
+    <div class="problem-card fade-up">
+      <div class="problem-icon">📉</div>
+      <h3>Slipping Star Rating</h3>
+      <p>One bad month can drag your rating down for years. Without a system, your Google ranking slowly declines and new customers can't find you.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="section-tag">The Solution</div>
+  <h2 class="section-title">Set it up once.<br>It runs itself forever.</h2>
+  <p class="section-sub">RepuLV's AI connects to all your review platforms and handles everything automatically. Here's exactly what happens:</p>
+
+  <div class="steps">
+    <div class="step fade-up">
+      <div class="step-num">01</div>
+      <div class="step-badge">Day 1</div>
+      <h3>We Connect Your Profiles</h3>
+      <p>We link your Google, Yelp, TripAdvisor, and Facebook profiles. Takes 10 minutes. You never touch it again.</p>
+    </div>
+    <div class="step fade-up">
+      <div class="step-num">02</div>
+      <div class="step-badge">Always On</div>
+      <h3>AI Monitors 24/7</h3>
+      <p>Every new review across every platform is detected within minutes. Our AI reads the sentiment and context instantly.</p>
+    </div>
+    <div class="step fade-up">
+      <div class="step-num">03</div>
+      <div class="step-badge">Automatic</div>
+      <h3>Responses Go Out</h3>
+      <p>AI crafts a personalized, on-brand response and posts it — no copy-paste, no templates. Real responses, every time.</p>
+    </div>
+    <div class="step fade-up">
+      <div class="step-num">04</div>
+      <div class="step-badge">Weekly</div>
+      <h3>You Get a Report</h3>
+      <p>Every Monday, one clean email shows your rating trend, new reviews, and anything flagged for your attention. That's it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <div class="section-tag">Pricing</div>
+  <h2 class="section-title">Simple, flat pricing.<br>No surprises.</h2>
+  <p class="section-sub">Cancel anytime. No contracts. Most businesses make back their monthly fee in the first week from recovered customers.</p>
+
+  <div class="pricing-grid">
+    <div class="pricing-card fade-up">
+      <div class="plan-name">Starter</div>
+      <div class="plan-price"><span>$</span>97</div>
+      <div class="plan-period">per month</div>
+      <ul class="plan-features">
+        <li>1 Business Location</li>
+        <li>Google + Yelp Monitoring</li>
+        <li>AI Review Responses</li>
+        <li>Review Request Texts</li>
+        <li>Weekly Email Report</li>
+        <li>Negative Review Alerts</li>
+      </ul>
+      <a href="#contact" class="btn-ghost" style="width:100%;text-align:center;display:block;">Get Started</a>
+    </div>
+
+    <div class="pricing-card featured fade-up">
+      <div class="featured-badge">Most Popular</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price"><span>$</span>197</div>
+      <div class="plan-period">per month</div>
+      <ul class="plan-features">
+        <li>1 Business Location</li>
+        <li>All Platforms (Google, Yelp, Trip, FB)</li>
+        <li>AI Review Responses</li>
+        <li>Review Request Texts + Email</li>
+        <li>Negative Review Crisis Mode</li>
+        <li>Competitor Monitoring</li>
+        <li>Monthly Strategy Call</li>
+      </ul>
+      <a href="#contact" class="btn-primary" style="width:100%;text-align:center;display:block;">Start Free Trial</a>
+    </div>
+
+    <div class="pricing-card fade-up">
+      <div class="plan-name">Agency</div>
+      <div class="plan-price"><span>$</span>397</div>
+      <div class="plan-period">per month</div>
+      <ul class="plan-features">
+        <li>Up to 5 Locations</li>
+        <li>All Platforms</li>
+        <li>Everything in Pro</li>
+        <li>Dedicated Account Manager</li>
+        <li>Custom Response Tone & Brand</li>
+        <li>Priority Support</li>
+        <li>Quarterly Reputation Audit</li>
+      </ul>
+      <a href="#contact" class="btn-ghost" style="width:100%;text-align:center;display:block;">Contact Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section" style="padding-top:0;">
+  <div class="section-tag">Results</div>
+  <h2 class="section-title">Las Vegas businesses<br>winning with RepuLV.</h2>
+
+  <div class="testimonials-grid">
+    <div class="testimonial fade-up">
+      <div class="stars">★★★★★</div>
+      <p>"We went from 3.8 to 4.6 stars on Google in just 6 weeks. I didn't do a single thing — the system handled every response automatically."</p>
+      <div class="testimonial-author">
+        <strong>Maria G.</strong>
+        Owner, Eastside Nail Studio — Las Vegas
+      </div>
+    </div>
+    <div class="testimonial fade-up">
+      <div class="stars">★★★★★</div>
+      <p>"A bad review came in on a Friday night. RepuLV responded within 4 minutes with a perfect message. The customer called us Saturday and removed it."</p>
+      <div class="testimonial-author">
+        <strong>James T.</strong>
+        Manager, Flamingo BBQ — Henderson
+      </div>
+    </div>
+    <div class="testimonial fade-up">
+      <div class="stars">★★★★★</div>
+      <p>"We're a busy spa with 3 locations. Managing reviews was a nightmare. Now I check one email Monday morning and I'm done. Game changer."</p>
+      <div class="testimonial-author">
+        <strong>Sandra L.</strong>
+        Owner, The Luxe Spa — Las Vegas Strip
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-grid">
+    <div class="contact-info">
+      <div class="section-tag">Get Started</div>
+      <h2>Let's protect your reputation — starting this week.</h2>
+      <p>Fill out the form and we'll set up your free 14-day trial. No credit card required. We'll have your business connected within 24 hours.</p>
+
+      <div class="contact-detail">
+        <div class="contact-detail-icon">📍</div>
+        <div class="contact-detail-text">
+          <strong>Serving All of Las Vegas</strong>
+          North Las Vegas · Henderson · Summerlin · The Strip
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">⚡</div>
+        <div class="contact-detail-text">
+          <strong>Setup in 24 Hours</strong>
+          We connect everything. You do nothing.
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">🔒</div>
+        <div class="contact-detail-text">
+          <strong>No Contracts</strong>
+          Cancel any time. No questions asked.
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" placeholder="John Smith">
+        </div>
+        <div class="form-group">
+          <label>Business Name</label>
+          <input type="text" placeholder="Smith's Restaurant">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" placeholder="(702) 555-0100">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="john@business.com">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Business Type</label>
+        <select>
+          <option value="">Select your industry</option>
+          <option>Restaurant / Bar</option>
+          <option>Spa / Nail Salon</option>
+          <option>Barbershop</option>
+          <option>Hotel / Hospitality</option>
+          <option>Auto Service</option>
+          <option>Medical / Dental</option>
+          <option>Retail Store</option>
+          <option>Entertainment / Escape Room</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Current Google Rating (if known)</label>
+        <input type="text" placeholder="e.g. 3.9 stars">
+      </div>
+      <button class="btn-primary" style="width:100%" onclick="handleSubmit(this)">
+        Start My Free 14-Day Trial →
+      </button>
+      <p style="font-size:12px;color:#555;text-align:center;margin-top:12px;">No credit card required. Setup within 24 hours.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">RepuLV</div>
+  <p>© 2026 RepuLV · AI Review Management · Las Vegas, Nevada</p>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+  // Scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Form submission
+  function handleSubmit(btn) {
+    btn.textContent = '✓ Request Received — We\'ll contact you within 2 hours!';
+    btn.style.background = '#2d6a2d';
+    btn.style.color = '#fff';
+    btn.disabled = true;
+  }
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
