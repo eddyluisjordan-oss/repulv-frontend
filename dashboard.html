@@ -773,27 +773,33 @@ async function generateForReview(id) {
   box.style.display = 'block';
   content.innerHTML = '<span class="generating"><span class="spinner"></span> Generating AI response...</span>';
 
+  // First try the RepuLV backend
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch(`${API}/reviews/respond`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 200,
-        messages: [{
-          role: 'user',
-          content: `You are the owner of a Las Vegas business. Write a professional, warm, and brief response to this ${review.rating}-star ${review.platform} review. Keep it under 60 words. Be genuine and human.\n\nReview: "${review.text}"\n\nRespond only with the response text, no preamble.`
-        }]
-      })
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ review_text: review.text, rating: review.rating, platform: review.platform })
     });
     const data = await res.json();
-    const responseText = data.content?.[0]?.text || 'Thank you for your feedback! We appreciate you taking the time to share your experience with us.';
-    content.textContent = responseText;
-    review.response = responseText;
-  } catch(e) {
-    // Use backend instead
-    content.textContent = 'Thank you so much for your wonderful feedback! We\'re thrilled you had a great experience and look forward to seeing you again soon!';
-  }
+    if (data.response) {
+      content.textContent = data.response;
+      review.response = data.response;
+      return;
+    }
+  } catch(e) {}
+
+  // Fallback: smart rating-aware responses
+  const fallbacks = {
+    5: `Thank you so much for the kind words! Reviews like yours truly make our day and mean the world to our entire team. We can't wait to see you again soon! 🙏`,
+    4: `Thank you for the great feedback! We're glad you had a positive experience and we'll take note of your suggestions to make your next visit even better. See you soon!`,
+    3: `Thank you for taking the time to share your experience. We're sorry it wasn't perfect — your feedback helps us improve. We'd love the chance to make it right on your next visit.`,
+    2: `We sincerely apologize for falling short of your expectations. This is not the experience we aim to provide. Please reach out to us directly so we can make this right for you.`,
+    1: `We are truly sorry for your experience and take your feedback very seriously. Please contact us directly — we want the opportunity to understand what went wrong and make it right.`
+  };
+
+  const responseText = fallbacks[review.rating] || fallbacks[3];
+  content.textContent = responseText;
+  review.response = responseText;
 }
 
 // ─────────────────────────────────────────────
@@ -846,7 +852,16 @@ async function generateResponse() {
       responseEl.textContent = data.content?.[0]?.text || 'Thank you for your feedback! We appreciate you taking the time to share your experience and look forward to serving you again.';
       result.style.display = 'block';
     } catch(e2) {
-      showToast('Could not connect to AI. Check your internet connection.');
+      const r = parseInt(document.getElementById('ai-rating').value);
+      const fallbacks = {
+        5: `Thank you so much for the wonderful review! Your kind words mean everything to our team. We look forward to seeing you again soon!`,
+        4: `Thank you for the great feedback! We're thrilled you had a positive experience and we'll work on your suggestions to make your next visit even better!`,
+        3: `Thank you for sharing your experience. We're sorry it wasn't everything you hoped for — your feedback helps us improve. We'd love to have you back.`,
+        2: `We sincerely apologize that your experience didn't meet your expectations. Please reach out to us directly so we can make this right for you.`,
+        1: `We are truly sorry for your experience and take your concerns very seriously. Please contact us directly — we want to personally address what happened and make this right.`
+      };
+      responseEl.textContent = fallbacks[r] || fallbacks[3];
+      result.style.display = 'block';
     }
   }
 
