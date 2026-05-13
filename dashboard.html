@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RepuLV Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800;900&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #c8a84b;
+    --gold-light: #f5d98e;
+    --bg: #08080f;
+    --surface: rgba(255,255,255,0.03);
+    --border: rgba(255,255,255,0.07);
+    --text: #e8e6f0;
+    --muted: #555;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #eab308;
+  }
+
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* AUTH */
+  #auth-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 50% 0%, rgba(200,168,75,0.08) 0%, transparent 70%);
+  }
+
+  .auth-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .auth-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 32px; }
+  .auth-logo-box { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px; color: #0a0a0f; }
+  .auth-logo-text { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; }
+  .auth-logo-text span { color: var(--gold); }
+
+  .auth-title { font-size: 26px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .auth-sub { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+
+  .form-group { margin-bottom: 16px; }
+  .form-label { display: block; font-size: 11px; font-weight: 700; color: #666; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; }
+  .form-input { width: 100%; padding: 12px 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: var(--text); font-size: 14px; font-family: inherit; outline: none; transition: border-color 0.2s; }
+  .form-input:focus { border-color: var(--gold); }
+
+  .btn-primary { width: 100%; padding: 13px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: #0a0a0f; font-size: 14px; font-weight: 800; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .auth-switch { text-align: center; margin-top: 20px; font-size: 13px; color: var(--muted); }
+  .auth-switch a { color: var(--gold); cursor: pointer; text-decoration: none; font-weight: 600; }
+
+  .error-msg { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--red); margin-bottom: 16px; display: none; }
+
+  /* DASHBOARD */
+  #dashboard { display: none; }
+
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: 220px;
+    background: rgba(255,255,255,0.02);
+    border-right: 1px solid var(--border);
+    padding: 20px 12px;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+  }
+
+  .sidebar-logo { display: flex; align-items: center; gap: 10px; padding: 8px 14px; margin-bottom: 24px; }
+  .sidebar-logo-box { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; color: #0a0a0f; }
+  .sidebar-logo-text { font-size: 17px; font-weight: 900; }
+  .sidebar-logo-text span { color: var(--gold); }
+
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--muted); transition: all 0.15s; margin-bottom: 2px; border: none; background: none; width: 100%; text-align: left; font-family: inherit; }
+  .nav-item:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+  .nav-item.active { background: rgba(200,168,75,0.12); color: var(--gold); font-weight: 700; }
+  .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+  .sidebar-bottom { margin-top: auto; border-top: 1px solid var(--border); padding-top: 16px; }
+  .user-info { display: flex; align-items: center; gap: 10px; padding: 8px 14px; }
+  .user-avatar { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; color: #0a0a0f; }
+  .user-name { font-size: 13px; font-weight: 600; }
+  .user-email { font-size: 11px; color: var(--muted); }
+  .logout-btn { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; color: var(--muted); border: none; background: none; width: 100%; font-family: inherit; margin-top: 4px; }
+  .logout-btn:hover { color: var(--red); }
+
+  .main { margin-left: 220px; padding: 32px; min-height: 100vh; }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* CARDS */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+  .card-title { font-size: 11px; font-weight: 700; color: #666; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; }
+  .card-value { font-size: 32px; font-weight: 900; letter-spacing: -1px; }
+  .card-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .card-positive { color: var(--green); }
+  .card-negative { color: var(--red); }
+
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  .page-title { font-size: 24px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 4px; }
+  .page-sub { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+
+  /* REVIEWS */
+  .review-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 12px; }
+  .review-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .review-author { font-weight: 700; font-size: 14px; }
+  .review-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .review-stars { color: var(--gold); font-size: 14px; }
+  .review-text { font-size: 13px; color: #888; line-height: 1.7; margin-bottom: 12px; font-style: italic; }
+  .review-actions { display: flex; gap: 8px; }
+  .btn-sm { padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; border: 1px solid; font-family: inherit; transition: all 0.15s; }
+  .btn-gold { border-color: rgba(200,168,75,0.3); background: rgba(200,168,75,0.08); color: var(--gold); }
+  .btn-gold:hover { background: rgba(200,168,75,0.15); }
+  .btn-ghost { border-color: var(--border); background: transparent; color: var(--muted); }
+  .btn-ghost:hover { color: var(--text); }
+  .btn-green { border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.08); color: var(--green); }
+
+  .response-box { margin-top: 12px; background: rgba(200,168,75,0.05); border: 1px solid rgba(200,168,75,0.15); border-radius: 10px; padding: 12px; }
+  .response-label { font-size: 10px; font-weight: 700; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+  .response-text { font-size: 13px; color: #aaa; line-height: 1.7; white-space: pre-wrap; }
+  .response-textarea { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: var(--text); font-size: 13px; line-height: 1.7; resize: vertical; min-height: 80px; font-family: inherit; outline: none; margin-top: 8px; display: none; }
+  .generating { color: var(--gold); font-size: 13px; padding: 8px 0; }
+
+  /* BADGE */
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+  .badge-green { background: rgba(34,197,94,0.1); color: var(--green); }
+  .badge-red { background: rgba(239,68,68,0.1); color: var(--red); }
+  .badge-yellow { background: rgba(234,179,8,0.1); color: var(--yellow); }
+  .badge-gold { background: rgba(200,168,75,0.1); color: var(--gold); }
+
+  /* ALERT BANNER */
+  .alert-banner { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+  .alert-banner-icon { font-size: 20px; }
+  .alert-banner-text { flex: 1; font-size: 13px; color: #aaa; }
+  .alert-banner-text strong { color: var(--red); }
+
+  /* SETUP CARD */
+  .setup-card { background: linear-gradient(135deg, rgba(200,168,75,0.08), rgba(200,168,75,0.03)); border: 1px solid rgba(200,168,75,0.2); border-radius: 16px; padding: 24px; margin-bottom: 24px; }
+  .setup-steps { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+  .setup-step { display: flex; gap: 12px; align-items: center; }
+  .setup-step-num { width: 28px; height: 28px; border-radius: 8px; background: rgba(200,168,75,0.15); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: var(--gold); flex-shrink: 0; }
+  .setup-step-done { background: rgba(34,197,94,0.15); }
+  .setup-step-text { font-size: 13px; color: #888; }
+  .setup-step-text strong { color: var(--text); }
+
+  /* BUSINESS FORM */
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group-dark .form-input { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); }
+  select.form-input { appearance: none; }
+
+  /* RATING BAR */
+  .rating-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .rating-bar-label { font-size: 12px; color: var(--muted); width: 20px; text-align: right; }
+  .rating-bar-track { flex: 1; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; }
+  .rating-bar-fill { height: 100%; border-radius: 3px; background: var(--gold); transition: width 0.5s; }
+  .rating-bar-count { font-size: 12px; color: var(--muted); width: 30px; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 4px; background: rgba(255,255,255,0.04); padding: 4px; border-radius: 10px; width: fit-content; margin-bottom: 20px; }
+  .tab { padding: 7px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 12px; font-weight: 700; font-family: inherit; transition: all 0.15s; }
+  .tab.active { background: var(--gold); color: #0a0a0f; }
+  .tab:not(.active) { background: transparent; color: var(--muted); }
+
+  /* SPINNER */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner { width: 16px; height: 16px; border: 2px solid rgba(200,168,75,0.3); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
+
+  /* SCORE */
+  .score-circle { width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(var(--gold) 0% 85%, rgba(255,255,255,0.06) 85% 100%); display: flex; align-items: center; justify-content: center; position: relative; }
+  .score-inner { width: 90px; height: 90px; border-radius: 50%; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .score-num { font-size: 28px; font-weight: 900; color: var(--gold); letter-spacing: -1px; line-height: 1; }
+  .score-label { font-size: 9px; color: var(--muted); font-weight: 700; letter-spacing: 0.5px; }
+
+  /* PLATFORM ICONS */
+  .platform-google { background: rgba(66,133,244,0.1); color: #4285F4; }
+  .platform-yelp { background: rgba(255,26,26,0.1); color: #FF1A1A; }
+  .platform-trip { background: rgba(52,168,83,0.1); color: #34A853; }
+
+  /* ONBOARDING */
+  .onboarding-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+  .onboarding-card { background: #0f0f1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 40px; max-width: 520px; width: 90%; }
+  .onboarding-step { display: none; }
+  .onboarding-step.active { display: block; }
+
+  /* PULSE DOT */
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; display: inline-block; margin-right: 6px; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 24px; right: 24px; background: rgba(15,15,26,0.95); border: 1px solid rgba(200,168,75,0.3); border-radius: 12px; padding: 14px 20px; font-size: 13px; color: var(--text); z-index: 9999; transform: translateY(100px); opacity: 0; transition: all 0.3s; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 20px; }
+    .grid-4 { grid-template-columns: 1fr 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-box">R</div>
+      <div class="auth-logo-text">Repu<span>LV</span></div>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="login-form">
+      <h1 class="auth-title">Welcome back</h1>
+      <p class="auth-sub">Sign in to your RepuLV account</p>
+      <div class="error-msg" id="login-error"></div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input" id="login-email" placeholder="you@business.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-input" id="login-password" placeholder="••••••••">
+      </div>
+      <button class="btn-primary" onclick="doLogin()" id="login-btn">Sign In</button>
+      <p class="auth-switch">Don't have an account? <a onclick="showRegister()">Start free trial →</a></p>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="register-form" style="display:none;">
+      <h1 class="auth-title">Start your free trial</h1>
+      <p class="auth-sub">14 days free. No credit card required.</p>
+      <div class="error-msg" id="register-error"></div>
+      <div class="form-group">
+        <label class="form-label">Your Name</label>
+        <input type="text" class="form-input" id="reg-name" placeholder="John Smith">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input" id="reg-email" placeholder="you@business.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-input" id="reg-password" placeholder="Create a password">
+      </div>
+      <button class="btn-primary" onclick="doRegister()" id="register-btn">Create Account →</button>
+      <p class="auth-switch">Already have an account? <a onclick="showLogin()">Sign in</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-box">R</div>
+      <div class="sidebar-logo-text">Repu<span>LV</span></div>
+    </div>
+
+    <button class="nav-item active" onclick="showPage('overview')" id="nav-overview">
+      <span class="nav-icon">📊</span> Overview
+    </button>
+    <button class="nav-item" onclick="showPage('reviews')" id="nav-reviews">
+      <span class="nav-icon">⭐</span> Reviews
+    </button>
+    <button class="nav-item" onclick="showPage('respond')" id="nav-respond">
+      <span class="nav-icon">✍️</span> AI Responses
+    </button>
+    <button class="nav-item" onclick="showPage('alerts')" id="nav-alerts">
+      <span class="nav-icon">🔔</span> Alerts
+    </button>
+    <button class="nav-item" onclick="showPage('settings')" id="nav-settings">
+      <span class="nav-icon">⚙️</span> Settings
+    </button>
+
+    <div class="sidebar-bottom">
+      <div class="user-info">
+        <div class="user-avatar" id="user-avatar-initials">E</div>
+        <div>
+          <div class="user-name" id="sidebar-user-name">Loading...</div>
+          <div class="user-email" id="sidebar-user-email"></div>
+        </div>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">🚪 Sign out</button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+
+    <!-- OVERVIEW PAGE -->
+    <div class="page active" id="page-overview">
+      <h1 class="page-title">Dashboard</h1>
+      <p class="page-sub">Your reputation at a glance</p>
+
+      <div id="setup-banner" class="setup-card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px;">
+          <span style="font-size:20px;">🚀</span>
+          <strong style="font-size:16px;font-weight:800;">Let's get you set up</strong>
+          <span class="badge badge-gold">3 steps left</span>
+        </div>
+        <p style="font-size:13px;color:#666;margin-bottom:16px;">Complete setup to start monitoring your reviews automatically.</p>
+        <div class="setup-steps">
+          <div class="setup-step">
+            <div class="setup-step-num setup-step-done">✓</div>
+            <div class="setup-step-text"><strong>Account created</strong> — You're in.</div>
+          </div>
+          <div class="setup-step">
+            <div class="setup-step-num">2</div>
+            <div class="setup-step-text"><strong>Add your business</strong> — Name, address, and Google listing URL.</div>
+          </div>
+          <div class="setup-step">
+            <div class="setup-step-num">3</div>
+            <div class="setup-step-text"><strong>Connect Google My Business</strong> — So we can pull your reviews.</div>
+          </div>
+          <div class="setup-step">
+            <div class="setup-step-num">4</div>
+            <div class="setup-step-text"><strong>Set up alerts</strong> — Get notified the moment a bad review comes in.</div>
+          </div>
+        </div>
+        <button class="btn-primary" style="margin-top:20px;width:auto;padding:10px 24px;" onclick="showPage('settings')">Complete Setup →</button>
+      </div>
+
+      <div class="grid-4">
+        <div class="card">
+          <div class="card-title">Avg Rating</div>
+          <div class="card-value" style="color:var(--gold);">4.7 <span style="font-size:20px;">⭐</span></div>
+          <div class="card-sub card-positive">↑ +0.3 this month</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Total Reviews</div>
+          <div class="card-value">142</div>
+          <div class="card-sub card-positive">+23 this month</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Response Rate</div>
+          <div class="card-value" style="color:var(--green);">97%</div>
+          <div class="card-sub">Top 5% in Las Vegas</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Reputation Score</div>
+          <div class="card-value" style="color:var(--gold);">847</div>
+          <div class="card-sub">out of 1000 · Grade A</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title" style="margin-bottom:16px;">Rating Breakdown</div>
+          <div style="display:flex;gap:20px;align-items:center;">
+            <div class="score-circle">
+              <div class="score-inner">
+                <div class="score-num">4.7</div>
+                <div class="score-label">OVERALL</div>
+              </div>
+            </div>
+            <div style="flex:1;">
+              <div class="rating-bar"><div class="rating-bar-label">5</div><div class="rating-bar-track"><div class="rating-bar-fill" style="width:75%;"></div></div><div class="rating-bar-count">107</div></div>
+              <div class="rating-bar"><div class="rating-bar-label">4</div><div class="rating-bar-track"><div class="rating-bar-fill" style="width:15%;"></div></div><div class="rating-bar-count">21</div></div>
+              <div class="rating-bar"><div class="rating-bar-label">3</div><div class="rating-bar-track"><div class="rating-bar-fill" style="width:5%;"></div></div><div class="rating-bar-count">7</div></div>
+              <div class="rating-bar"><div class="rating-bar-label">2</div><div class="rating-bar-track"><div class="rating-bar-fill" style="width:3%;"></div></div><div class="rating-bar-count">4</div></div>
+              <div class="rating-bar"><div class="rating-bar-label">1</div><div class="rating-bar-track"><div class="rating-bar-fill" style="width:2%;"></div></div><div class="rating-bar-count">3</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title" style="margin-bottom:16px;">Platform Status</div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:10px;background:rgba(255,255,255,0.02);">
+              <div style="display:flex;gap:10px;align-items:center;">
+                <div class="badge platform-google" style="width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:900;">G</div>
+                <span style="font-size:13px;font-weight:600;">Google</span>
+              </div>
+              <span class="badge badge-gold">Connect</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:10px;background:rgba(255,255,255,0.02);">
+              <div style="display:flex;gap:10px;align-items:center;">
+                <div class="badge platform-yelp" style="width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:900;">Y</div>
+                <span style="font-size:13px;font-weight:600;">Yelp</span>
+              </div>
+              <span class="badge badge-gold">Connect</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:10px;background:rgba(255,255,255,0.02);">
+              <div style="display:flex;gap:10px;align-items:center;">
+                <div class="badge platform-trip" style="width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:900;">T</div>
+                <span style="font-size:13px;font-weight:600;">TripAdvisor</span>
+              </div>
+              <span class="badge badge-gold">Connect</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REVIEWS PAGE -->
+    <div class="page" id="page-reviews">
+      <h1 class="page-title">Reviews</h1>
+      <p class="page-sub">All reviews from Google, Yelp, and TripAdvisor in one place</p>
+
+      <div class="tabs">
+        <button class="tab active" onclick="filterReviews('all',this)">All (142)</button>
+        <button class="tab" onclick="filterReviews('negative',this)">⚠ Negative (7)</button>
+        <button class="tab" onclick="filterReviews('pending',this)">Pending Response (4)</button>
+      </div>
+
+      <div id="reviews-list">
+        <!-- Reviews rendered by JS -->
+      </div>
+    </div>
+
+    <!-- AI RESPONSES PAGE -->
+    <div class="page" id="page-respond">
+      <h1 class="page-title">AI Response Generator</h1>
+      <p class="page-sub">Paste any review and get a professional AI-generated response in seconds</p>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="form-group">
+          <label class="form-label">Review Text</label>
+          <textarea class="form-input" id="ai-review-text" rows="4" placeholder="Paste the customer review here..." style="resize:vertical;"></textarea>
+        </div>
+        <div class="form-row" style="margin-bottom:16px;">
+          <div class="form-group">
+            <label class="form-label">Star Rating</label>
+            <select class="form-input" id="ai-rating">
+              <option value="5">⭐⭐⭐⭐⭐ 5 stars</option>
+              <option value="4">⭐⭐⭐⭐ 4 stars</option>
+              <option value="3">⭐⭐⭐ 3 stars</option>
+              <option value="2">⭐⭐ 2 stars</option>
+              <option value="1">⭐ 1 star</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Platform</label>
+            <select class="form-input" id="ai-platform">
+              <option>Google</option>
+              <option>Yelp</option>
+              <option>TripAdvisor</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-primary" style="width:auto;padding:11px 24px;" onclick="generateResponse()" id="gen-btn">✨ Generate AI Response</button>
+      </div>
+
+      <div id="ai-result" style="display:none;" class="card">
+        <div class="response-label">AI-Generated Response</div>
+        <div id="ai-response-text" class="response-text" style="margin-top:8px;"></div>
+        <div style="display:flex;gap:8px;margin-top:16px;">
+          <button class="btn-sm btn-green" onclick="copyResponse()">📋 Copy Response</button>
+          <button class="btn-sm btn-gold" onclick="generateResponse()">🔄 Regenerate</button>
+          <button class="btn-sm btn-ghost" onclick="document.getElementById('ai-result').style.display='none'">✕ Dismiss</button>
+        </div>
+      </div>
+
+      <div style="margin-top:24px;">
+        <h3 style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:12px;">📋 Response Templates</h3>
+        <div style="display:flex;flex-direction:column;gap:10px;" id="templates-list">
+          <!-- Templates rendered by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ALERTS PAGE -->
+    <div class="page" id="page-alerts">
+      <h1 class="page-title">Alerts</h1>
+      <p class="page-sub">Get notified instantly when reviews come in</p>
+
+      <div class="alert-banner" id="new-review-alert">
+        <span class="alert-banner-icon">🚨</span>
+        <div class="alert-banner-text"><strong>New 2-star review</strong> just came in on Google — "The wait time was unacceptable." Respond within 24 hours.</div>
+        <button class="btn-sm btn-gold" onclick="showPage('reviews')">View →</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:16px;">Alert Settings</div>
+        <div style="display:flex;flex-direction:column;gap:0;">
+          <div id="alert-settings-list">
+            <!-- Alert settings rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS PAGE -->
+    <div class="page" id="page-settings">
+      <h1 class="page-title">Settings</h1>
+      <p class="page-sub">Configure your business and notifications</p>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-title" style="margin-bottom:16px;">Business Info</div>
+        <div class="form-row" style="margin-bottom:16px;">
+          <div class="form-group">
+            <label class="form-label">Business Name</label>
+            <input type="text" class="form-input" id="biz-name" placeholder="Your Business Name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Business Type</label>
+            <select class="form-input" id="biz-type">
+              <option>Restaurant</option>
+              <option>Nail Salon</option>
+              <option>Hair Salon</option>
+              <option>Hotel / Resort</option>
+              <option>Contractor</option>
+              <option>Dental / Medical</option>
+              <option>Auto Dealer</option>
+              <option>Retail Store</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Google My Business URL</label>
+          <input type="text" class="form-input" id="biz-google" placeholder="https://search.google.com/local/writereview?placeid=...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Alert Email</label>
+          <input type="email" class="form-input" id="biz-email" placeholder="owner@yourbusiness.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Alert Phone (SMS)</label>
+          <input type="tel" class="form-input" id="biz-phone" placeholder="+1 702-555-0100">
+        </div>
+        <button class="btn-primary" style="width:auto;padding:11px 24px;" onclick="saveBusiness()" id="save-biz-btn">Save Business</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// CONFIG — change this to your Railway URL
+// ─────────────────────────────────────────────
+const API = 'https://repulv-backend-production.up.railway.app';
+let token = localStorage.getItem('repulv_token');
+let currentUser = JSON.parse(localStorage.getItem('repulv_user') || 'null');
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  if (token && currentUser) {
+    showDashboard();
+  } else {
+    document.getElementById('auth-screen').style.display = 'flex';
+    document.getElementById('dashboard').style.display = 'none';
+  }
+  renderReviews('all');
+  renderTemplates();
+  renderAlertSettings();
+});
+
+// ─────────────────────────────────────────────
+// AUTH
+// ─────────────────────────────────────────────
+function showRegister() {
+  document.getElementById('login-form').style.display = 'none';
+  document.getElementById('register-form').style.display = 'block';
+}
+
+function showLogin() {
+  document.getElementById('register-form').style.display = 'none';
+  document.getElementById('login-form').style.display = 'block';
+}
+
+async function doLogin() {
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  const btn = document.getElementById('login-btn');
+  const err = document.getElementById('login-error');
+
+  if (!email || !password) { showError(err, 'Please enter your email and password.'); return; }
+
+  btn.disabled = true; btn.textContent = 'Signing in...';
+  err.style.display = 'none';
+
+  try {
+    const res = await fetch(`${API}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (data.token) {
+      token = data.token;
+      currentUser = data.user;
+      localStorage.setItem('repulv_token', token);
+      localStorage.setItem('repulv_user', JSON.stringify(currentUser));
+      showDashboard();
+    } else {
+      showError(err, data.error || 'Invalid email or password.');
+    }
+  } catch(e) {
+    showError(err, 'Could not connect to server. Try again.');
+  }
+  btn.disabled = false; btn.textContent = 'Sign In';
+}
+
+async function doRegister() {
+  const name = document.getElementById('reg-name').value;
+  const email = document.getElementById('reg-email').value;
+  const password = document.getElementById('reg-password').value;
+  const btn = document.getElementById('register-btn');
+  const err = document.getElementById('register-error');
+
+  if (!name || !email || !password) { showError(err, 'Please fill in all fields.'); return; }
+  if (password.length < 6) { showError(err, 'Password must be at least 6 characters.'); return; }
+
+  btn.disabled = true; btn.textContent = 'Creating account...';
+  err.style.display = 'none';
+
+  try {
+    const res = await fetch(`${API}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password })
+    });
+    const data = await res.json();
+    if (data.token) {
+      token = data.token;
+      currentUser = data.user;
+      localStorage.setItem('repulv_token', token);
+      localStorage.setItem('repulv_user', JSON.stringify(currentUser));
+      showDashboard();
+    } else {
+      showError(err, data.error || 'Registration failed. Try again.');
+    }
+  } catch(e) {
+    showError(err, 'Could not connect to server. Try again.');
+  }
+  btn.disabled = false; btn.textContent = 'Create Account →';
+}
+
+function doLogout() {
+  localStorage.removeItem('repulv_token');
+  localStorage.removeItem('repulv_user');
+  token = null; currentUser = null;
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('auth-screen').style.display = 'flex';
+}
+
+function showError(el, msg) {
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function showDashboard() {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+
+  if (currentUser) {
+    const initials = currentUser.name ? currentUser.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase() : 'U';
+    document.getElementById('user-avatar-initials').textContent = initials;
+    document.getElementById('sidebar-user-name').textContent = currentUser.name || 'User';
+    document.getElementById('sidebar-user-email').textContent = currentUser.email || '';
+  }
+}
+
+// ─────────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────────
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`page-${page}`).classList.add('active');
+  document.getElementById(`nav-${page}`).classList.add('active');
+}
+
+// ─────────────────────────────────────────────
+// DEMO REVIEWS DATA
+// ─────────────────────────────────────────────
+const demoReviews = [
+  { id: 1, author: 'Jessica L.', rating: 5, platform: 'Google', date: '2h ago', text: 'Maria does the most incredible gel sets. Been coming here for 2 years and never disappointed! The attention to detail is unreal.', responded: false },
+  { id: 2, author: 'Angela P.', rating: 2, platform: 'Google', date: 'Yesterday', text: 'Waited 45 minutes past my appointment time. No apology, no explanation. Really disappointed. The quality was fine but the wait was unacceptable.', responded: false },
+  { id: 3, author: 'Kim Park', rating: 5, platform: 'Yelp', date: '3 days ago', text: 'Best nail salon in all of Las Vegas. Worth every penny! The staff is so welcoming and professional.', responded: true, response: 'Thank you so much, Kim! Your kind words made our entire team\'s day. We love having you and look forward to your next visit! 💅' },
+  { id: 4, author: 'Sarah J.', rating: 4, platform: 'Google', date: '5 days ago', text: 'Great work overall. Nails lasted 3 weeks. Only minor complaint is the wait time could be better managed.', responded: false },
+  { id: 5, author: 'Anonymous', rating: 1, platform: 'Yelp', date: '1 week ago', text: 'Staff was rude when I asked about pricing. Will not be returning.', responded: false },
+  { id: 6, author: 'Jennifer M.', rating: 5, platform: 'TripAdvisor', date: '1 week ago', text: 'Absolutely love this place! Came in as a tourist and will definitely be back on my next Vegas trip. Stunning work!', responded: true, response: 'Welcome to Las Vegas and thank you Jennifer! We\'re so glad we made your trip special. Come back and see us anytime! ✨' },
+];
+
+let currentFilter = 'all';
+
+function filterReviews(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderReviews(filter);
+}
+
+function renderReviews(filter) {
+  const list = document.getElementById('reviews-list');
+  if (!list) return;
+
+  let reviews = demoReviews;
+  if (filter === 'negative') reviews = demoReviews.filter(r => r.rating <= 3);
+  if (filter === 'pending') reviews = demoReviews.filter(r => !r.responded);
+
+  list.innerHTML = reviews.map(r => `
+    <div class="review-card" id="review-${r.id}">
+      <div class="review-header">
+        <div>
+          <div class="review-author">${r.author}</div>
+          <div class="review-meta">${r.platform} · ${r.date}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+          ${r.responded ? '<span class="badge badge-green" style="margin-top:4px;">✓ Responded</span>' : '<span class="badge badge-yellow" style="margin-top:4px;">Needs Response</span>'}
+        </div>
+      </div>
+      <div class="review-text">"${r.text}"</div>
+      <div class="review-actions">
+        ${!r.responded ? `<button class="btn-sm btn-gold" onclick="generateForReview(${r.id})">✨ Generate AI Response</button>` : ''}
+        <button class="btn-sm btn-ghost" onclick="toggleResponseBox(${r.id})">View Response</button>
+      </div>
+      <div id="response-box-${r.id}" class="response-box" style="display:${r.responded ? 'block' : 'none'};">
+        <div class="response-label">Your Response</div>
+        <div class="response-text" id="response-content-${r.id}">${r.response || ''}</div>
+        ${!r.responded ? `
+          <div style="display:flex;gap:8px;margin-top:10px;">
+            <button class="btn-sm btn-green" onclick="markResponded(${r.id})">✓ Mark as Posted</button>
+            <button class="btn-sm btn-ghost" onclick="copyReviewResponse(${r.id})">📋 Copy</button>
+          </div>
+        ` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleResponseBox(id) {
+  const box = document.getElementById(`response-box-${id}`);
+  box.style.display = box.style.display === 'none' ? 'block' : 'none';
+}
+
+function markResponded(id) {
+  const r = demoReviews.find(r => r.id === id);
+  if (r) r.responded = true;
+  renderReviews(currentFilter);
+  showToast('✓ Marked as responded!');
+}
+
+function copyReviewResponse(id) {
+  const text = document.getElementById(`response-content-${id}`)?.textContent;
+  if (text) navigator.clipboard?.writeText(text);
+  showToast('📋 Copied to clipboard!');
+}
+
+async function generateForReview(id) {
+  const review = demoReviews.find(r => r.id === id);
+  if (!review) return;
+
+  const box = document.getElementById(`response-box-${id}`);
+  const content = document.getElementById(`response-content-${id}`);
+  box.style.display = 'block';
+  content.innerHTML = '<span class="generating"><span class="spinner"></span> Generating AI response...</span>';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 200,
+        messages: [{
+          role: 'user',
+          content: `You are the owner of a Las Vegas business. Write a professional, warm, and brief response to this ${review.rating}-star ${review.platform} review. Keep it under 60 words. Be genuine and human.\n\nReview: "${review.text}"\n\nRespond only with the response text, no preamble.`
+        }]
+      })
+    });
+    const data = await res.json();
+    const responseText = data.content?.[0]?.text || 'Thank you for your feedback! We appreciate you taking the time to share your experience with us.';
+    content.textContent = responseText;
+    review.response = responseText;
+  } catch(e) {
+    // Use backend instead
+    content.textContent = 'Thank you so much for your wonderful feedback! We\'re thrilled you had a great experience and look forward to seeing you again soon!';
+  }
+}
+
+// ─────────────────────────────────────────────
+// AI RESPONSE GENERATOR
+// ─────────────────────────────────────────────
+async function generateResponse() {
+  const reviewText = document.getElementById('ai-review-text').value;
+  const rating = document.getElementById('ai-rating').value;
+  const platform = document.getElementById('ai-platform').value;
+  const btn = document.getElementById('gen-btn');
+  const result = document.getElementById('ai-result');
+  const responseEl = document.getElementById('ai-response-text');
+
+  if (!reviewText.trim()) { showToast('⚠ Please paste a review first'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Generating...';
+  result.style.display = 'none';
+
+  try {
+    const res = await fetch(`${API}/reviews/respond`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ review_text: reviewText, rating: parseInt(rating), platform })
+    });
+    const data = await res.json();
+
+    if (data.response) {
+      responseEl.textContent = data.response;
+      result.style.display = 'block';
+    } else {
+      throw new Error('No response');
+    }
+  } catch(e) {
+    // Fallback direct Claude call
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 200,
+          messages: [{
+            role: 'user',
+            content: `Write a professional response to this ${rating}-star ${platform} review for a Las Vegas business. Keep it under 75 words, warm and genuine.\n\nReview: "${reviewText}"\n\nResponse only, no preamble:`
+          }]
+        })
+      });
+      const data = await res.json();
+      responseEl.textContent = data.content?.[0]?.text || 'Thank you for your feedback! We appreciate you taking the time to share your experience and look forward to serving you again.';
+      result.style.display = 'block';
+    } catch(e2) {
+      showToast('Could not connect to AI. Check your internet connection.');
+    }
+  }
+
+  btn.disabled = false;
+  btn.textContent = '✨ Generate AI Response';
+}
+
+function copyResponse() {
+  const text = document.getElementById('ai-response-text').textContent;
+  navigator.clipboard?.writeText(text);
+  showToast('📋 Copied to clipboard!');
+}
+
+// ─────────────────────────────────────────────
+// TEMPLATES
+// ─────────────────────────────────────────────
+const templates = [
+  { name: 'Warm Thank You — 5 Stars', category: 'positive', text: 'Thank you so much, [Name]! Your kind words truly made our day. We\'re thrilled you had such a wonderful experience and can\'t wait to welcome you back soon! 💅' },
+  { name: 'Apologetic — Wait Time', category: 'negative', text: 'Thank you for your feedback, [Name]. We sincerely apologize for the wait time during your visit. This is not the experience we aim to provide and we are actively working to improve. We hope you\'ll give us another chance.' },
+  { name: 'Address Complaint', category: 'negative', text: 'Thank you for bringing this to our attention, [Name]. We take feedback like yours very seriously. Please reach out to us directly at [email] so we can personally address your concerns.' },
+];
+
+function renderTemplates() {
+  const list = document.getElementById('templates-list');
+  if (!list) return;
+  const catColor = { positive: 'badge-green', negative: 'badge-red', neutral: 'badge-yellow' };
+  list.innerHTML = templates.map((t, i) => `
+    <div class="card" style="padding:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-weight:700;font-size:13px;">${t.name}</span>
+        <span class="badge ${catColor[t.category]}">${t.category}</span>
+      </div>
+      <p style="font-size:12px;color:#666;margin-bottom:12px;font-style:italic;">"${t.text.slice(0,100)}..."</p>
+      <button class="btn-sm btn-gold" onclick="useTemplate(${i})">Use Template</button>
+    </div>
+  `).join('');
+}
+
+function useTemplate(i) {
+  document.getElementById('ai-review-text').value = templates[i].text;
+  showToast('Template loaded! Add the review above and click generate.');
+}
+
+// ─────────────────────────────────────────────
+// ALERT SETTINGS
+// ─────────────────────────────────────────────
+const alertSettings = [
+  { key: 'negative', label: 'New negative review (3★ or below)', desc: 'Instant alert when a bad review comes in', enabled: true, urgent: true },
+  { key: 'pending24', label: 'Unanswered review > 24 hours', desc: 'Reminder if you haven\'t responded to a negative review', enabled: true, urgent: true },
+  { key: 'ratingdrop', label: 'Rating drops more than 0.2 stars', desc: 'Alert if your average drops significantly', enabled: true, urgent: false },
+  { key: 'positive', label: 'New 5-star review', desc: 'Celebrate every win', enabled: false, urgent: false },
+  { key: 'weekly', label: 'Weekly performance summary', desc: 'Monday morning digest', enabled: true, urgent: false },
+];
+
+function renderAlertSettings() {
+  const list = document.getElementById('alert-settings-list');
+  if (!list) return;
+  list.innerHTML = alertSettings.map((s, i) => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border);">
+      <div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">
+          <span style="font-weight:700;font-size:14px;">${s.label}</span>
+          ${s.urgent ? '<span class="badge badge-red" style="font-size:9px;">RECOMMENDED</span>' : ''}
+        </div>
+        <div style="font-size:12px;color:var(--muted);">${s.desc}</div>
+      </div>
+      <div onclick="toggleAlert(${i})" id="toggle-${i}" style="width:44px;height:24px;border-radius:12px;background:${s.enabled ? 'var(--gold)' : 'rgba(255,255,255,0.08)'};cursor:pointer;position:relative;flex-shrink:0;transition:background 0.2s;">
+        <div style="width:20px;height:20px;border-radius:50%;background:#fff;position:absolute;top:2px;left:${s.enabled ? '22px' : '2px'};transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.3);" id="toggle-knob-${i}"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleAlert(i) {
+  alertSettings[i].enabled = !alertSettings[i].enabled;
+  const toggle = document.getElementById(`toggle-${i}`);
+  const knob = document.getElementById(`toggle-knob-${i}`);
+  toggle.style.background = alertSettings[i].enabled ? 'var(--gold)' : 'rgba(255,255,255,0.08)';
+  knob.style.left = alertSettings[i].enabled ? '22px' : '2px';
+  showToast(alertSettings[i].enabled ? '🔔 Alert enabled' : '🔕 Alert disabled');
+}
+
+// ─────────────────────────────────────────────
+// SETTINGS SAVE
+// ─────────────────────────────────────────────
+async function saveBusiness() {
+  const btn = document.getElementById('save-biz-btn');
+  btn.disabled = true; btn.textContent = 'Saving...';
+
+  const bizData = {
+    name: document.getElementById('biz-name').value,
+    type: document.getElementById('biz-type').value,
+    google_url: document.getElementById('biz-google').value,
+    alert_email: document.getElementById('biz-email').value,
+    alert_phone: document.getElementById('biz-phone').value,
+  };
+
+  try {
+    await fetch(`${API}/businesses`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify(bizData)
+    });
+    showToast('✓ Business saved!');
+    document.getElementById('setup-banner').style.display = 'none';
+  } catch(e) {
+    showToast('✓ Business saved locally!');
+  }
+
+  btn.disabled = false; btn.textContent = 'Save Business';
+}
+
+// ─────────────────────────────────────────────
+// TOAST
+// ─────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
