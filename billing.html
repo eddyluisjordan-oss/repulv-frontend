@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RepuLV — Billing & Plans</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --gold-dim: #8A6F30;
+    --black: #0A0A0A;
+    --surface: #111111;
+    --surface2: #191919;
+    --surface3: #222222;
+    --border: rgba(201,168,76,0.18);
+    --border-hover: rgba(201,168,76,0.45);
+    --text: #F0EDE6;
+    --text-muted: #888880;
+    --text-dim: #555550;
+    --danger: #E05252;
+    --success: #4CAF74;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ─── LAYOUT ─── */
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 24px 100px;
+  }
+
+  /* ─── HEADER ─── */
+  .page-header {
+    margin-bottom: 56px;
+    text-align: center;
+  }
+  .page-header .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+  .page-header h1 span { color: var(--gold); }
+  .page-header p {
+    color: var(--text-muted);
+    font-size: 15px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* ─── CURRENT PLAN BANNER ─── */
+  .current-plan-bar {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 48px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .current-plan-bar .label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .current-plan-bar .plan-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .current-plan-bar .plan-name.free { color: var(--text-muted); }
+  .manage-btn {
+    background: transparent;
+    border: 1px solid var(--border-hover);
+    color: var(--gold);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 9px 20px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    white-space: nowrap;
+    display: none;
+  }
+  .manage-btn:hover { background: rgba(201,168,76,0.08); }
+  .manage-btn.visible { display: inline-block; }
+
+  /* ─── PLANS GRID ─── */
+  .plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 56px;
+  }
+
+  .plan-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 28px 36px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: default;
+  }
+  .plan-card:hover { border-color: var(--border-hover); }
+  .plan-card.featured {
+    border: 1.5px solid var(--gold);
+    background: linear-gradient(160deg, #161208 0%, var(--surface) 60%);
+  }
+  .plan-card.current-active {
+    border-color: var(--success);
+  }
+
+  .plan-badge {
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gold);
+    color: #0A0A0A;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .plan-badge.active-badge {
+    background: var(--success);
+    color: #fff;
+  }
+
+  .plan-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .plan-tagline {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    min-height: 36px;
+  }
+  .plan-price {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-bottom: 28px;
+  }
+  .plan-price .dollar { font-size: 22px; color: var(--gold); font-weight: 600; }
+  .plan-price .amount { font-size: 48px; font-weight: 300; color: var(--text); line-height: 1; }
+  .plan-price .period { font-size: 14px; color: var(--text-muted); align-self: flex-end; margin-bottom: 6px; }
+
+  .plan-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 24px;
+  }
+
+  .plan-features {
+    list-style: none;
+    margin-bottom: 32px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+  .plan-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+  .plan-features li .check {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: rgba(201,168,76,0.12);
+    border: 1px solid rgba(201,168,76,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .plan-features li .check svg { width: 9px; height: 9px; stroke: var(--gold); }
+  .plan-features li strong { color: var(--text); font-weight: 500; }
+
+  /* ─── CTA BUTTON ─── */
+  .cta-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    text-align: center;
+    border: none;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .cta-btn:hover { opacity: 0.88; }
+  .cta-btn:active { transform: scale(0.98); }
+
+  .cta-btn.gold {
+    background: var(--gold);
+    color: #0A0A0A;
+  }
+  .cta-btn.outline {
+    background: transparent;
+    border: 1px solid var(--border-hover);
+    color: var(--gold);
+  }
+  .cta-btn.current {
+    background: rgba(76,175,116,0.12);
+    border: 1px solid rgba(76,175,116,0.35);
+    color: var(--success);
+    cursor: default;
+  }
+  .cta-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+  .cta-btn.loading::after {
+    content: ' …';
+  }
+
+  /* ─── FAQ / INFO ─── */
+  .info-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 48px;
+  }
+  .info-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+  }
+  .info-card .icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    background: rgba(201,168,76,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+  .info-card .icon svg { width: 18px; height: 18px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
+  .info-card h3 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .info-card p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+  /* ─── TOAST ─── */
+  #toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 14px;
+    padding: 12px 22px;
+    border-radius: 30px;
+    transition: transform 0.3s ease;
+    z-index: 999;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 640px) {
+    .current-plan-bar { flex-direction: column; align-items: flex-start; }
+    .plans-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="eyebrow">Subscription</div>
+    <h1>Your <span>RepuLV</span> Plan</h1>
+    <p>Protect your reputation 24/7. Upgrade or manage your plan anytime.</p>
+  </div>
+
+  <!-- Current Plan Bar -->
+  <div class="current-plan-bar">
+    <div>
+      <div class="label">Current Plan</div>
+      <div class="plan-name free" id="current-plan-display">Free Trial</div>
+    </div>
+    <button class="manage-btn" id="manage-btn" onclick="openPortal()">Manage Billing →</button>
+  </div>
+
+  <!-- Plans -->
+  <div class="plans-grid">
+
+    <!-- STARTER -->
+    <div class="plan-card" id="card-starter">
+      <div class="plan-name">Starter</div>
+      <div class="plan-tagline">One location. Full AI reputation management.</div>
+      <div class="plan-price">
+        <span class="dollar">$</span>
+        <span class="amount">149</span>
+        <span class="period">/month</span>
+      </div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li><span class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span><strong>1 business location</strong></span></li>
+        <li><span class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span>Google, Yelp & TripAdvisor monitoring</span></li>
+        <li><span class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span>AI-generated review responses</span></li>
+        <li><span class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span>Email alerts for negative reviews</span></li>
+        <li><span class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span>Reputation dashboard</span></li>
+      </ul>
+      <button class="cta-btn outline" id="btn-starter" onclick="subscribe('starter')">Get Started</button>
+    </div>
+
+    <!-- PRO (featured) -->
+    <div class="plan-card featured" id="card-pro">
+      <div class="plan-badge" id="badge-pro">Most Popular</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-tagline">Multi-location power for growing businesses.</div>
+      <div class="plan-price">
+        <span class="dollar">$</span>
+        <span class="amount">299</span>
+        <span class="period">/month</span>
+      </div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li><span class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span><strong>Up to 3 locations</strong></span></li>
+        <li><span class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span>Google, Yelp, TripAdvisor & Facebook</span></li>
+        <li><span class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span>Priority AI responses</span></li>
+        <li><span class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span>SMS + email alerts</span></li>
+        <li><span class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span>Monthly reputation report</span></li>
+        <li><span class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span>Competitor tracking</span></li>
+      </ul>
+      <button class="cta-btn gold" id="btn-pro" onclick="subscribe('pro')">Choose Pro</button>
+    </div>
+
+    <!-- ENTERPRISE -->
+    <div class="plan-card" id="card-enterprise">
+      <div class="plan-name">Enterprise</div>
+      <div class="plan-tagline">Unlimited locations for agencies & groups.</div>
+      <div class="plan-price">
+        <span class="dollar">$</span>
+        <span class="amount">599</span>
+        <span class="period">/month</span>
+      </div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li><span class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span><strong>Unlimited locations</strong></span></li>
+        <li><span class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span>All platforms including BBB</span></li>
+        <li><span class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span>White-glove onboarding</span></li>
+        <li><span class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span>Dedicated account manager</span></li>
+        <li><span class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span>Custom AI response voice & tone</span></li>
+        <li><span class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span>Weekly strategy call</span></li>
+      </ul>
+      <button class="cta-btn outline" id="btn-enterprise" onclick="subscribe('enterprise')">Contact Sales</button>
+    </div>
+
+  </div>
+
+  <!-- Info Cards -->
+  <div class="info-section">
+    <div class="info-card">
+      <div class="icon">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h3>Cancel anytime</h3>
+      <p>No contracts, no cancellation fees. Cancel or downgrade your plan from the billing portal at any time.</p>
+    </div>
+    <div class="info-card">
+      <div class="icon">
+        <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      </div>
+      <h3>Secure payments</h3>
+      <p>All billing handled securely via Stripe. RepuLV never stores your card details.</p>
+    </div>
+    <div class="info-card">
+      <div class="icon">
+        <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      </div>
+      <h3>Upgrade instantly</h3>
+      <p>Switch plans at any time. Upgrades take effect immediately. Downgrades apply at your next billing cycle.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+  // ── CONFIG ──
+  const API_BASE = 'https://repulv-backend-production.up.railway.app';
+
+  const PLANS = {
+    starter:    { name: 'Starter',    priceId: 'price_1TYAlbFn3MyMh9ki9MKEznlk' },
+    pro:        { name: 'Pro',        priceId: 'price_1TYAnfFn3MyMh9kio5MmwYxn' },
+    enterprise: { name: 'Enterprise', priceId: 'price_1TYAoCFn3MyMh9kiaIeXhYoT' }
+  };
+
+  // ── HELPERS ──
+  function getToken() {
+    return localStorage.getItem('repulv_token') || sessionStorage.getItem('repulv_token');
+  }
+
+  function toast(msg, duration = 3500) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), duration);
+  }
+
+  function setLoading(planKey, isLoading) {
+    const btn = document.getElementById('btn-' + planKey);
+    if (!btn) return;
+    btn.disabled = isLoading;
+    btn.classList.toggle('loading', isLoading);
+    if (!isLoading) btn.classList.remove('loading');
+  }
+
+  // ── LOAD CURRENT PLAN ──
+  async function loadCurrentPlan() {
+    const token = getToken();
+    if (!token) return;
+
+    try {
+      const res = await fetch(API_BASE + '/billing/status', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+
+      const plan = data.plan; // 'starter' | 'pro' | 'enterprise' | null
+      if (!plan) return;
+
+      const planInfo = PLANS[plan];
+      if (!planInfo) return;
+
+      // Update banner
+      const display = document.getElementById('current-plan-display');
+      display.textContent = planInfo.name;
+      display.classList.remove('free');
+
+      // Show manage button
+      document.getElementById('manage-btn').classList.add('visible');
+
+      // Highlight active card
+      const card = document.getElementById('card-' + plan);
+      if (card) {
+        card.classList.add('current-active');
+        // Remove featured gold border if it's pro
+        card.classList.remove('featured');
+
+        // Swap badge
+        const badge = document.getElementById('badge-' + plan);
+        if (badge) {
+          badge.textContent = 'Current Plan';
+          badge.classList.add('active-badge');
+        } else {
+          const newBadge = document.createElement('div');
+          newBadge.className = 'plan-badge active-badge';
+          newBadge.id = 'badge-' + plan;
+          newBadge.textContent = 'Current Plan';
+          card.prepend(newBadge);
+        }
+
+        // Update CTA
+        const btn = document.getElementById('btn-' + plan);
+        if (btn) {
+          btn.textContent = 'Current Plan';
+          btn.className = 'cta-btn current';
+          btn.onclick = null;
+        }
+      }
+    } catch (e) {
+      console.error('Failed to load billing status', e);
+    }
+  }
+
+  // ── SUBSCRIBE ──
+  async function subscribe(planKey) {
+    const token = getToken();
+    if (!token) {
+      toast('Please log in to subscribe.');
+      setTimeout(() => { window.location.href = '/dashboard.html'; }, 1500);
+      return;
+    }
+
+    setLoading(planKey, true);
+
+    try {
+      const res = await fetch(API_BASE + '/billing/create-checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({ plan: planKey })
+      });
+
+      const data = await res.json();
+
+      if (data.checkout_url) {
+        window.location.href = data.checkout_url;
+      } else {
+        toast('Something went wrong. Please try again.');
+        setLoading(planKey, false);
+      }
+    } catch (err) {
+      console.error(err);
+      toast('Network error. Please try again.');
+      setLoading(planKey, false);
+    }
+  }
+
+  // ── MANAGE PORTAL ──
+  async function openPortal() {
+    const token = getToken();
+    if (!token) return;
+
+    document.getElementById('manage-btn').textContent = 'Opening portal…';
+
+    try {
+      const res = await fetch(API_BASE + '/billing/create-portal', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        }
+      });
+      const data = await res.json();
+      if (data.portal_url) {
+        window.location.href = data.portal_url;
+      } else {
+        toast('Could not open billing portal. Please try again.');
+        document.getElementById('manage-btn').textContent = 'Manage Billing →';
+      }
+    } catch (err) {
+      toast('Network error. Please try again.');
+      document.getElementById('manage-btn').textContent = 'Manage Billing →';
+    }
+  }
+
+  // ── INIT ──
+  loadCurrentPlan();
+</script>
+</body>
+</html>
