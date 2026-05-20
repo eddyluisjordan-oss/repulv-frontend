@@ -23,7 +23,6 @@
 
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  /* AUTH */
   #auth-screen {
     min-height: 100vh;
     display: flex;
@@ -63,7 +62,6 @@
 
   .error-msg { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--red); margin-bottom: 16px; display: none; }
 
-  /* DASHBOARD */
   #dashboard { display: none; }
 
   .sidebar {
@@ -101,7 +99,6 @@
   .page { display: none; }
   .page.active { display: block; }
 
-  /* CARDS */
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
   .card-title { font-size: 11px; font-weight: 700; color: #666; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; }
   .card-value { font-size: 32px; font-weight: 900; letter-spacing: -1px; }
@@ -115,7 +112,6 @@
   .page-title { font-size: 24px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 4px; }
   .page-sub { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
 
-  /* REVIEWS */
   .review-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 12px; }
   .review-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
   .review-author { font-weight: 700; font-size: 14px; }
@@ -133,23 +129,19 @@
   .response-box { margin-top: 12px; background: rgba(200,168,75,0.05); border: 1px solid rgba(200,168,75,0.15); border-radius: 10px; padding: 12px; }
   .response-label { font-size: 10px; font-weight: 700; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
   .response-text { font-size: 13px; color: #aaa; line-height: 1.7; white-space: pre-wrap; }
-  .response-textarea { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: var(--text); font-size: 13px; line-height: 1.7; resize: vertical; min-height: 80px; font-family: inherit; outline: none; margin-top: 8px; display: none; }
   .generating { color: var(--gold); font-size: 13px; padding: 8px 0; }
 
-  /* BADGE */
   .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
   .badge-green { background: rgba(34,197,94,0.1); color: var(--green); }
   .badge-red { background: rgba(239,68,68,0.1); color: var(--red); }
   .badge-yellow { background: rgba(234,179,8,0.1); color: var(--yellow); }
   .badge-gold { background: rgba(200,168,75,0.1); color: var(--gold); }
 
-  /* ALERT BANNER */
   .alert-banner { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
   .alert-banner-icon { font-size: 20px; }
   .alert-banner-text { flex: 1; font-size: 13px; color: #aaa; }
   .alert-banner-text strong { color: var(--red); }
 
-  /* SETUP CARD */
   .setup-card { background: linear-gradient(135deg, rgba(200,168,75,0.08), rgba(200,168,75,0.03)); border: 1px solid rgba(200,168,75,0.2); border-radius: 16px; padding: 24px; margin-bottom: 24px; }
   .setup-steps { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
   .setup-step { display: flex; gap: 12px; align-items: center; }
@@ -158,54 +150,38 @@
   .setup-step-text { font-size: 13px; color: #888; }
   .setup-step-text strong { color: var(--text); }
 
-  /* BUSINESS FORM */
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .form-group-dark .form-input { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); }
   select.form-input { appearance: none; }
 
-  /* RATING BAR */
   .rating-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
   .rating-bar-label { font-size: 12px; color: var(--muted); width: 20px; text-align: right; }
   .rating-bar-track { flex: 1; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; }
   .rating-bar-fill { height: 100%; border-radius: 3px; background: var(--gold); transition: width 0.5s; }
   .rating-bar-count { font-size: 12px; color: var(--muted); width: 30px; }
 
-  /* TABS */
   .tabs { display: flex; gap: 4px; background: rgba(255,255,255,0.04); padding: 4px; border-radius: 10px; width: fit-content; margin-bottom: 20px; }
   .tab { padding: 7px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 12px; font-weight: 700; font-family: inherit; transition: all 0.15s; }
   .tab.active { background: var(--gold); color: #0a0a0f; }
   .tab:not(.active) { background: transparent; color: var(--muted); }
 
-  /* SPINNER */
   @keyframes spin { to { transform: rotate(360deg); } }
   .spinner { width: 16px; height: 16px; border: 2px solid rgba(200,168,75,0.3); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
 
-  /* SCORE */
   .score-circle { width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(var(--gold) 0% 85%, rgba(255,255,255,0.06) 85% 100%); display: flex; align-items: center; justify-content: center; position: relative; }
   .score-inner { width: 90px; height: 90px; border-radius: 50%; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; }
   .score-num { font-size: 28px; font-weight: 900; color: var(--gold); letter-spacing: -1px; line-height: 1; }
   .score-label { font-size: 9px; color: var(--muted); font-weight: 700; letter-spacing: 0.5px; }
 
-  /* PLATFORM ICONS */
   .platform-google { background: rgba(66,133,244,0.1); color: #4285F4; }
   .platform-yelp { background: rgba(255,26,26,0.1); color: #FF1A1A; }
   .platform-trip { background: rgba(52,168,83,0.1); color: #34A853; }
 
-  /* ONBOARDING */
-  .onboarding-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; display: flex; align-items: center; justify-content: center; }
-  .onboarding-card { background: #0f0f1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 40px; max-width: 520px; width: 90%; }
-  .onboarding-step { display: none; }
-  .onboarding-step.active { display: block; }
-
-  /* PULSE DOT */
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
   .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; display: inline-block; margin-right: 6px; }
 
-  /* TOAST */
   .toast { position: fixed; bottom: 24px; right: 24px; background: rgba(15,15,26,0.95); border: 1px solid rgba(200,168,75,0.3); border-radius: 12px; padding: 14px 20px; font-size: 13px; color: var(--text); z-index: 9999; transform: translateY(100px); opacity: 0; transition: all 0.3s; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
   .toast.show { transform: translateY(0); opacity: 1; }
 
-  /* RESPONSIVE */
   @media (max-width: 768px) {
     .sidebar { display: none; }
     .main { margin-left: 0; padding: 20px; }
@@ -217,18 +193,14 @@
 </head>
 <body>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- AUTH SCREEN -->
 <div id="auth-screen">
   <div class="auth-card">
     <div class="auth-logo">
       <div class="auth-logo-box">R</div>
       <div class="auth-logo-text">Repu<span>LV</span></div>
     </div>
-
-    <!-- LOGIN -->
     <div id="login-form">
       <h1 class="auth-title">Welcome back</h1>
       <p class="auth-sub">Sign in to your RepuLV account</p>
@@ -242,10 +214,8 @@
         <input type="password" class="form-input" id="login-password" placeholder="••••••••">
       </div>
       <button class="btn-primary" onclick="doLogin()" id="login-btn">Sign In</button>
-      <p class="auth-switch">Don't have an account? <a onclick="showRegister()">Start free trial →</a></p>
+      <p class="auth-switch">Don't have an account? <a onclick="showRegister()">Start free trial &rarr;</a></p>
     </div>
-
-    <!-- REGISTER -->
     <div id="register-form" style="display:none;">
       <h1 class="auth-title">Start your free trial</h1>
       <p class="auth-sub">14 days free. No credit card required.</p>
@@ -262,15 +232,13 @@
         <label class="form-label">Password</label>
         <input type="password" class="form-input" id="reg-password" placeholder="Create a password">
       </div>
-      <button class="btn-primary" onclick="doRegister()" id="register-btn">Create Account →</button>
+      <button class="btn-primary" onclick="doRegister()" id="register-btn">Create Account &rarr;</button>
       <p class="auth-switch">Already have an account? <a onclick="showLogin()">Sign in</a></p>
     </div>
   </div>
 </div>
 
-<!-- DASHBOARD -->
 <div id="dashboard">
-  <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-logo">
       <div class="sidebar-logo-box">R</div>
@@ -278,19 +246,22 @@
     </div>
 
     <button class="nav-item active" onclick="showPage('overview')" id="nav-overview">
-      <span class="nav-icon">📊</span> Overview
+      <span class="nav-icon">&#128202;</span> Overview
     </button>
     <button class="nav-item" onclick="showPage('reviews')" id="nav-reviews">
-      <span class="nav-icon">⭐</span> Reviews
+      <span class="nav-icon">&#11088;</span> Reviews
     </button>
     <button class="nav-item" onclick="showPage('respond')" id="nav-respond">
-      <span class="nav-icon">✍️</span> AI Responses
+      <span class="nav-icon">&#9997;&#65039;</span> AI Responses
     </button>
     <button class="nav-item" onclick="showPage('alerts')" id="nav-alerts">
-      <span class="nav-icon">🔔</span> Alerts
+      <span class="nav-icon">&#128276;</span> Alerts
     </button>
     <button class="nav-item" onclick="showPage('settings')" id="nav-settings">
-      <span class="nav-icon">⚙️</span> Settings
+      <span class="nav-icon">&#9881;&#65039;</span> Settings
+    </button>
+    <button class="nav-item" onclick="window.location.href='billing.html'" id="nav-billing">
+      <span class="nav-icon">&#128179;</span> Billing
     </button>
 
     <div class="sidebar-bottom">
@@ -301,51 +272,48 @@
           <div class="user-email" id="sidebar-user-email"></div>
         </div>
       </div>
-      <button class="logout-btn" onclick="doLogout()">🚪 Sign out</button>
+      <button class="logout-btn" onclick="doLogout()">&#128682; Sign out</button>
     </div>
   </div>
 
-  <!-- Main Content -->
   <div class="main">
 
-    <!-- OVERVIEW PAGE -->
     <div class="page active" id="page-overview">
       <h1 class="page-title">Dashboard</h1>
       <p class="page-sub">Your reputation at a glance</p>
-
       <div id="setup-banner" class="setup-card">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px;">
-          <span style="font-size:20px;">🚀</span>
+          <span style="font-size:20px;">&#128640;</span>
           <strong style="font-size:16px;font-weight:800;">Let's get you set up</strong>
           <span class="badge badge-gold">3 steps left</span>
         </div>
         <p style="font-size:13px;color:#666;margin-bottom:16px;">Complete setup to start monitoring your reviews automatically.</p>
         <div class="setup-steps">
           <div class="setup-step">
-            <div class="setup-step-num setup-step-done">✓</div>
-            <div class="setup-step-text"><strong>Account created</strong> — You're in.</div>
+            <div class="setup-step-num setup-step-done">&#10003;</div>
+            <div class="setup-step-text"><strong>Account created</strong> &mdash; You're in.</div>
           </div>
           <div class="setup-step">
             <div class="setup-step-num">2</div>
-            <div class="setup-step-text"><strong>Add your business</strong> — Name, address, and Google listing URL.</div>
+            <div class="setup-step-text"><strong>Add your business</strong> &mdash; Name, address, and Google listing URL.</div>
           </div>
           <div class="setup-step">
             <div class="setup-step-num">3</div>
-            <div class="setup-step-text"><strong>Connect Google My Business</strong> — So we can pull your reviews.</div>
+            <div class="setup-step-text"><strong>Connect Google My Business</strong> &mdash; So we can pull your reviews.</div>
           </div>
           <div class="setup-step">
             <div class="setup-step-num">4</div>
-            <div class="setup-step-text"><strong>Set up alerts</strong> — Get notified the moment a bad review comes in.</div>
+            <div class="setup-step-text"><strong>Set up alerts</strong> &mdash; Get notified the moment a bad review comes in.</div>
           </div>
         </div>
-        <button class="btn-primary" style="margin-top:20px;width:auto;padding:10px 24px;" onclick="showPage('settings')">Complete Setup →</button>
+        <button class="btn-primary" style="margin-top:20px;width:auto;padding:10px 24px;" onclick="showPage('settings')">Complete Setup &rarr;</button>
       </div>
 
       <div class="grid-4">
         <div class="card">
           <div class="card-title">Avg Rating</div>
-          <div class="card-value" style="color:var(--gold);">4.7 <span style="font-size:20px;">⭐</span></div>
-          <div class="card-sub card-positive">↑ +0.3 this month</div>
+          <div class="card-value" style="color:var(--gold);">4.7 <span style="font-size:20px;">&#11088;</span></div>
+          <div class="card-sub card-positive">&uarr; +0.3 this month</div>
         </div>
         <div class="card">
           <div class="card-title">Total Reviews</div>
@@ -360,7 +328,7 @@
         <div class="card">
           <div class="card-title">Reputation Score</div>
           <div class="card-value" style="color:var(--gold);">847</div>
-          <div class="card-sub">out of 1000 · Grade A</div>
+          <div class="card-sub">out of 1000 &middot; Grade A</div>
         </div>
       </div>
 
@@ -383,7 +351,6 @@
             </div>
           </div>
         </div>
-
         <div class="card">
           <div class="card-title" style="margin-bottom:16px;">Platform Status</div>
           <div style="display:flex;flex-direction:column;gap:12px;">
@@ -413,27 +380,20 @@
       </div>
     </div>
 
-    <!-- REVIEWS PAGE -->
     <div class="page" id="page-reviews">
       <h1 class="page-title">Reviews</h1>
       <p class="page-sub">All reviews from Google, Yelp, and TripAdvisor in one place</p>
-
       <div class="tabs">
         <button class="tab active" onclick="filterReviews('all',this)">All (142)</button>
-        <button class="tab" onclick="filterReviews('negative',this)">⚠ Negative (7)</button>
+        <button class="tab" onclick="filterReviews('negative',this)">&#9888; Negative (7)</button>
         <button class="tab" onclick="filterReviews('pending',this)">Pending Response (4)</button>
       </div>
-
-      <div id="reviews-list">
-        <!-- Reviews rendered by JS -->
-      </div>
+      <div id="reviews-list"></div>
     </div>
 
-    <!-- AI RESPONSES PAGE -->
     <div class="page" id="page-respond">
       <h1 class="page-title">AI Response Generator</h1>
       <p class="page-sub">Paste any review and get a professional AI-generated response in seconds</p>
-
       <div class="card" style="margin-bottom:20px;">
         <div class="form-group">
           <label class="form-label">Review Text</label>
@@ -443,11 +403,11 @@
           <div class="form-group">
             <label class="form-label">Star Rating</label>
             <select class="form-input" id="ai-rating">
-              <option value="5">⭐⭐⭐⭐⭐ 5 stars</option>
-              <option value="4">⭐⭐⭐⭐ 4 stars</option>
-              <option value="3">⭐⭐⭐ 3 stars</option>
-              <option value="2">⭐⭐ 2 stars</option>
-              <option value="1">⭐ 1 star</option>
+              <option value="5">&#11088;&#11088;&#11088;&#11088;&#11088; 5 stars</option>
+              <option value="4">&#11088;&#11088;&#11088;&#11088; 4 stars</option>
+              <option value="3">&#11088;&#11088;&#11088; 3 stars</option>
+              <option value="2">&#11088;&#11088; 2 stars</option>
+              <option value="1">&#11088; 1 star</option>
             </select>
           </div>
           <div class="form-group">
@@ -459,53 +419,40 @@
             </select>
           </div>
         </div>
-        <button class="btn-primary" style="width:auto;padding:11px 24px;" onclick="generateResponse()" id="gen-btn">✨ Generate AI Response</button>
+        <button class="btn-primary" style="width:auto;padding:11px 24px;" onclick="generateResponse()" id="gen-btn">&#10024; Generate AI Response</button>
       </div>
-
       <div id="ai-result" style="display:none;" class="card">
         <div class="response-label">AI-Generated Response</div>
         <div id="ai-response-text" class="response-text" style="margin-top:8px;"></div>
         <div style="display:flex;gap:8px;margin-top:16px;">
-          <button class="btn-sm btn-green" onclick="copyResponse()">📋 Copy Response</button>
-          <button class="btn-sm btn-gold" onclick="generateResponse()">🔄 Regenerate</button>
-          <button class="btn-sm btn-ghost" onclick="document.getElementById('ai-result').style.display='none'">✕ Dismiss</button>
+          <button class="btn-sm btn-green" onclick="copyResponse()">&#128203; Copy Response</button>
+          <button class="btn-sm btn-gold" onclick="generateResponse()">&#128260; Regenerate</button>
+          <button class="btn-sm btn-ghost" onclick="document.getElementById('ai-result').style.display='none'">&#10005; Dismiss</button>
         </div>
       </div>
-
       <div style="margin-top:24px;">
-        <h3 style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:12px;">📋 Response Templates</h3>
-        <div style="display:flex;flex-direction:column;gap:10px;" id="templates-list">
-          <!-- Templates rendered by JS -->
-        </div>
+        <h3 style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:12px;">&#128203; Response Templates</h3>
+        <div style="display:flex;flex-direction:column;gap:10px;" id="templates-list"></div>
       </div>
     </div>
 
-    <!-- ALERTS PAGE -->
     <div class="page" id="page-alerts">
       <h1 class="page-title">Alerts</h1>
       <p class="page-sub">Get notified instantly when reviews come in</p>
-
       <div class="alert-banner" id="new-review-alert">
-        <span class="alert-banner-icon">🚨</span>
-        <div class="alert-banner-text"><strong>New 2-star review</strong> just came in on Google — "The wait time was unacceptable." Respond within 24 hours.</div>
-        <button class="btn-sm btn-gold" onclick="showPage('reviews')">View →</button>
+        <span class="alert-banner-icon">&#128680;</span>
+        <div class="alert-banner-text"><strong>New 2-star review</strong> just came in on Google &mdash; "The wait time was unacceptable." Respond within 24 hours.</div>
+        <button class="btn-sm btn-gold" onclick="showPage('reviews')">View &rarr;</button>
       </div>
-
       <div class="card">
         <div class="card-title" style="margin-bottom:16px;">Alert Settings</div>
-        <div style="display:flex;flex-direction:column;gap:0;">
-          <div id="alert-settings-list">
-            <!-- Alert settings rendered by JS -->
-          </div>
-        </div>
+        <div id="alert-settings-list"></div>
       </div>
     </div>
 
-    <!-- SETTINGS PAGE -->
     <div class="page" id="page-settings">
       <h1 class="page-title">Settings</h1>
       <p class="page-sub">Configure your business and notifications</p>
-
       <div class="card" style="margin-bottom:20px;">
         <div class="card-title" style="margin-bottom:16px;">Business Info</div>
         <div class="form-row" style="margin-bottom:16px;">
@@ -548,16 +495,10 @@
 </div>
 
 <script>
-// ─────────────────────────────────────────────
-// CONFIG — change this to your Railway URL
-// ─────────────────────────────────────────────
 const API = 'https://repulv-backend-production.up.railway.app';
 let token = localStorage.getItem('repulv_token');
 let currentUser = JSON.parse(localStorage.getItem('repulv_user') || 'null');
 
-// ─────────────────────────────────────────────
-// INIT
-// ─────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
   if (token && currentUser) {
     showDashboard();
@@ -570,14 +511,10 @@ window.addEventListener('DOMContentLoaded', () => {
   renderAlertSettings();
 });
 
-// ─────────────────────────────────────────────
-// AUTH
-// ─────────────────────────────────────────────
 function showRegister() {
   document.getElementById('login-form').style.display = 'none';
   document.getElementById('register-form').style.display = 'block';
 }
-
 function showLogin() {
   document.getElementById('register-form').style.display = 'none';
   document.getElementById('login-form').style.display = 'block';
@@ -588,31 +525,19 @@ async function doLogin() {
   const password = document.getElementById('login-password').value;
   const btn = document.getElementById('login-btn');
   const err = document.getElementById('login-error');
-
   if (!email || !password) { showError(err, 'Please enter your email and password.'); return; }
-
   btn.disabled = true; btn.textContent = 'Signing in...';
   err.style.display = 'none';
-
   try {
-    const res = await fetch(`${API}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    });
+    const res = await fetch(`${API}/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
     const data = await res.json();
     if (data.token) {
-      token = data.token;
-      currentUser = data.user;
+      token = data.token; currentUser = data.user;
       localStorage.setItem('repulv_token', token);
       localStorage.setItem('repulv_user', JSON.stringify(currentUser));
       showDashboard();
-    } else {
-      showError(err, data.error || 'Invalid email or password.');
-    }
-  } catch(e) {
-    showError(err, 'Could not connect to server. Try again.');
-  }
+    } else { showError(err, data.error || 'Invalid email or password.'); }
+  } catch(e) { showError(err, 'Could not connect to server. Try again.'); }
   btn.disabled = false; btn.textContent = 'Sign In';
 }
 
@@ -622,33 +547,21 @@ async function doRegister() {
   const password = document.getElementById('reg-password').value;
   const btn = document.getElementById('register-btn');
   const err = document.getElementById('register-error');
-
   if (!name || !email || !password) { showError(err, 'Please fill in all fields.'); return; }
   if (password.length < 6) { showError(err, 'Password must be at least 6 characters.'); return; }
-
   btn.disabled = true; btn.textContent = 'Creating account...';
   err.style.display = 'none';
-
   try {
-    const res = await fetch(`${API}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password })
-    });
+    const res = await fetch(`${API}/auth/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, password }) });
     const data = await res.json();
     if (data.token) {
-      token = data.token;
-      currentUser = data.user;
+      token = data.token; currentUser = data.user;
       localStorage.setItem('repulv_token', token);
       localStorage.setItem('repulv_user', JSON.stringify(currentUser));
       showDashboard();
-    } else {
-      showError(err, data.error || 'Registration failed. Try again.');
-    }
-  } catch(e) {
-    showError(err, 'Could not connect to server. Try again.');
-  }
-  btn.disabled = false; btn.textContent = 'Create Account →';
+    } else { showError(err, data.error || 'Registration failed. Try again.'); }
+  } catch(e) { showError(err, 'Could not connect to server. Try again.'); }
+  btn.disabled = false; btn.textContent = 'Create Account \u2192';
 }
 
 function doLogout() {
@@ -659,15 +572,11 @@ function doLogout() {
   document.getElementById('auth-screen').style.display = 'flex';
 }
 
-function showError(el, msg) {
-  el.textContent = msg;
-  el.style.display = 'block';
-}
+function showError(el, msg) { el.textContent = msg; el.style.display = 'block'; }
 
 function showDashboard() {
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('dashboard').style.display = 'block';
-
   if (currentUser) {
     const initials = currentUser.name ? currentUser.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase() : 'U';
     document.getElementById('user-avatar-initials').textContent = initials;
@@ -676,9 +585,6 @@ function showDashboard() {
   }
 }
 
-// ─────────────────────────────────────────────
-// NAVIGATION
-// ─────────────────────────────────────────────
 function showPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -686,16 +592,13 @@ function showPage(page) {
   document.getElementById(`nav-${page}`).classList.add('active');
 }
 
-// ─────────────────────────────────────────────
-// DEMO REVIEWS DATA
-// ─────────────────────────────────────────────
 const demoReviews = [
   { id: 1, author: 'Jessica L.', rating: 5, platform: 'Google', date: '2h ago', text: 'Maria does the most incredible gel sets. Been coming here for 2 years and never disappointed! The attention to detail is unreal.', responded: false },
   { id: 2, author: 'Angela P.', rating: 2, platform: 'Google', date: 'Yesterday', text: 'Waited 45 minutes past my appointment time. No apology, no explanation. Really disappointed. The quality was fine but the wait was unacceptable.', responded: false },
-  { id: 3, author: 'Kim Park', rating: 5, platform: 'Yelp', date: '3 days ago', text: 'Best nail salon in all of Las Vegas. Worth every penny! The staff is so welcoming and professional.', responded: true, response: 'Thank you so much, Kim! Your kind words made our entire team\'s day. We love having you and look forward to your next visit! 💅' },
+  { id: 3, author: 'Kim Park', rating: 5, platform: 'Yelp', date: '3 days ago', text: 'Best nail salon in all of Las Vegas. Worth every penny! The staff is so welcoming and professional.', responded: true, response: "Thank you so much, Kim! Your kind words made our entire team's day. We love having you and look forward to your next visit! \uD83D\uDC85" },
   { id: 4, author: 'Sarah J.', rating: 4, platform: 'Google', date: '5 days ago', text: 'Great work overall. Nails lasted 3 weeks. Only minor complaint is the wait time could be better managed.', responded: false },
   { id: 5, author: 'Anonymous', rating: 1, platform: 'Yelp', date: '1 week ago', text: 'Staff was rude when I asked about pricing. Will not be returning.', responded: false },
-  { id: 6, author: 'Jennifer M.', rating: 5, platform: 'TripAdvisor', date: '1 week ago', text: 'Absolutely love this place! Came in as a tourist and will definitely be back on my next Vegas trip. Stunning work!', responded: true, response: 'Welcome to Las Vegas and thank you Jennifer! We\'re so glad we made your trip special. Come back and see us anytime! ✨' },
+  { id: 6, author: 'Jennifer M.', rating: 5, platform: 'TripAdvisor', date: '1 week ago', text: 'Absolutely love this place! Came in as a tourist and will definitely be back on my next Vegas trip. Stunning work!', responded: true, response: "Welcome to Las Vegas and thank you Jennifer! We're so glad we made your trip special. Come back and see us anytime! \u2728" },
 ];
 
 let currentFilter = 'all';
@@ -710,37 +613,33 @@ function filterReviews(filter, btn) {
 function renderReviews(filter) {
   const list = document.getElementById('reviews-list');
   if (!list) return;
-
   let reviews = demoReviews;
   if (filter === 'negative') reviews = demoReviews.filter(r => r.rating <= 3);
   if (filter === 'pending') reviews = demoReviews.filter(r => !r.responded);
-
   list.innerHTML = reviews.map(r => `
     <div class="review-card" id="review-${r.id}">
       <div class="review-header">
         <div>
           <div class="review-author">${r.author}</div>
-          <div class="review-meta">${r.platform} · ${r.date}</div>
+          <div class="review-meta">${r.platform} &middot; ${r.date}</div>
         </div>
         <div style="text-align:right;">
-          <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
-          ${r.responded ? '<span class="badge badge-green" style="margin-top:4px;">✓ Responded</span>' : '<span class="badge badge-yellow" style="margin-top:4px;">Needs Response</span>'}
+          <div class="review-stars">${'\u2605'.repeat(r.rating)}${'\u2606'.repeat(5-r.rating)}</div>
+          ${r.responded ? '<span class="badge badge-green" style="margin-top:4px;">\u2713 Responded</span>' : '<span class="badge badge-yellow" style="margin-top:4px;">Needs Response</span>'}
         </div>
       </div>
       <div class="review-text">"${r.text}"</div>
       <div class="review-actions">
-        ${!r.responded ? `<button class="btn-sm btn-gold" onclick="generateForReview(${r.id})">✨ Generate AI Response</button>` : ''}
+        ${!r.responded ? `<button class="btn-sm btn-gold" onclick="generateForReview(${r.id})">\u2728 Generate AI Response</button>` : ''}
         <button class="btn-sm btn-ghost" onclick="toggleResponseBox(${r.id})">View Response</button>
       </div>
       <div id="response-box-${r.id}" class="response-box" style="display:${r.responded ? 'block' : 'none'};">
         <div class="response-label">Your Response</div>
         <div class="response-text" id="response-content-${r.id}">${r.response || ''}</div>
-        ${!r.responded ? `
-          <div style="display:flex;gap:8px;margin-top:10px;">
-            <button class="btn-sm btn-green" onclick="markResponded(${r.id})">✓ Mark as Posted</button>
-            <button class="btn-sm btn-ghost" onclick="copyReviewResponse(${r.id})">📋 Copy</button>
-          </div>
-        ` : ''}
+        ${!r.responded ? `<div style="display:flex;gap:8px;margin-top:10px;">
+          <button class="btn-sm btn-green" onclick="markResponded(${r.id})">\u2713 Mark as Posted</button>
+          <button class="btn-sm btn-ghost" onclick="copyReviewResponse(${r.id})">\uD83D\uDCCB Copy</button>
+        </div>` : ''}
       </div>
     </div>
   `).join('');
@@ -750,61 +649,35 @@ function toggleResponseBox(id) {
   const box = document.getElementById(`response-box-${id}`);
   box.style.display = box.style.display === 'none' ? 'block' : 'none';
 }
-
 function markResponded(id) {
   const r = demoReviews.find(r => r.id === id);
   if (r) r.responded = true;
   renderReviews(currentFilter);
-  showToast('✓ Marked as responded!');
+  showToast('\u2713 Marked as responded!');
 }
-
 function copyReviewResponse(id) {
   const text = document.getElementById(`response-content-${id}`)?.textContent;
   if (text) navigator.clipboard?.writeText(text);
-  showToast('📋 Copied to clipboard!');
+  showToast('\uD83D\uDCCB Copied to clipboard!');
 }
 
 async function generateForReview(id) {
   const review = demoReviews.find(r => r.id === id);
   if (!review) return;
-
   const box = document.getElementById(`response-box-${id}`);
   const content = document.getElementById(`response-content-${id}`);
   box.style.display = 'block';
   content.innerHTML = '<span class="generating"><span class="spinner"></span> Generating AI response...</span>';
-
-  // First try the RepuLV backend
   try {
-    const res = await fetch(`${API}/reviews/respond`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify({ review_text: review.text, rating: review.rating, platform: review.platform })
-    });
+    const res = await fetch(`${API}/reviews/respond`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ review_text: review.text, rating: review.rating, platform: review.platform }) });
     const data = await res.json();
-    if (data.response) {
-      content.textContent = data.response;
-      review.response = data.response;
-      return;
-    }
+    if (data.response) { content.textContent = data.response; review.response = data.response; return; }
   } catch(e) {}
-
-  // Fallback: smart rating-aware responses
-  const fallbacks = {
-    5: `Thank you so much for the kind words! Reviews like yours truly make our day and mean the world to our entire team. We can't wait to see you again soon! 🙏`,
-    4: `Thank you for the great feedback! We're glad you had a positive experience and we'll take note of your suggestions to make your next visit even better. See you soon!`,
-    3: `Thank you for taking the time to share your experience. We're sorry it wasn't perfect — your feedback helps us improve. We'd love the chance to make it right on your next visit.`,
-    2: `We sincerely apologize for falling short of your expectations. This is not the experience we aim to provide. Please reach out to us directly so we can make this right for you.`,
-    1: `We are truly sorry for your experience and take your feedback very seriously. Please contact us directly — we want the opportunity to understand what went wrong and make it right.`
-  };
-
-  const responseText = fallbacks[review.rating] || fallbacks[3];
-  content.textContent = responseText;
-  review.response = responseText;
+  const fallbacks = { 5: "Thank you so much for the kind words! Reviews like yours truly make our day. We can't wait to see you again soon!", 4: "Thank you for the great feedback! We're glad you had a positive experience. See you soon!", 3: "Thank you for sharing your experience. Your feedback helps us improve. We'd love the chance to make it right.", 2: "We sincerely apologize for falling short. Please reach out directly so we can make this right.", 1: "We are truly sorry and take your feedback seriously. Please contact us directly — we want to make it right." };
+  content.textContent = fallbacks[review.rating] || fallbacks[3];
+  review.response = content.textContent;
 }
 
-// ─────────────────────────────────────────────
-// AI RESPONSE GENERATOR
-// ─────────────────────────────────────────────
 async function generateResponse() {
   const reviewText = document.getElementById('ai-review-text').value;
   const rating = document.getElementById('ai-rating').value;
@@ -812,76 +685,34 @@ async function generateResponse() {
   const btn = document.getElementById('gen-btn');
   const result = document.getElementById('ai-result');
   const responseEl = document.getElementById('ai-response-text');
-
-  if (!reviewText.trim()) { showToast('⚠ Please paste a review first'); return; }
-
+  if (!reviewText.trim()) { showToast('\u26A0 Please paste a review first'); return; }
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Generating...';
   result.style.display = 'none';
-
   try {
-    const res = await fetch(`${API}/reviews/respond`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify({ review_text: reviewText, rating: parseInt(rating), platform })
-    });
+    const res = await fetch(`${API}/reviews/respond`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ review_text: reviewText, rating: parseInt(rating), platform }) });
     const data = await res.json();
-
-    if (data.response) {
-      responseEl.textContent = data.response;
-      result.style.display = 'block';
-    } else {
-      throw new Error('No response');
-    }
+    if (data.response) { responseEl.textContent = data.response; result.style.display = 'block'; }
+    else throw new Error('No response');
   } catch(e) {
-    // Fallback direct Claude call
-    try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 200,
-          messages: [{
-            role: 'user',
-            content: `Write a professional response to this ${rating}-star ${platform} review for a Las Vegas business. Keep it under 75 words, warm and genuine.\n\nReview: "${reviewText}"\n\nResponse only, no preamble:`
-          }]
-        })
-      });
-      const data = await res.json();
-      responseEl.textContent = data.content?.[0]?.text || 'Thank you for your feedback! We appreciate you taking the time to share your experience and look forward to serving you again.';
-      result.style.display = 'block';
-    } catch(e2) {
-      const r = parseInt(document.getElementById('ai-rating').value);
-      const fallbacks = {
-        5: `Thank you so much for the wonderful review! Your kind words mean everything to our team. We look forward to seeing you again soon!`,
-        4: `Thank you for the great feedback! We're thrilled you had a positive experience and we'll work on your suggestions to make your next visit even better!`,
-        3: `Thank you for sharing your experience. We're sorry it wasn't everything you hoped for — your feedback helps us improve. We'd love to have you back.`,
-        2: `We sincerely apologize that your experience didn't meet your expectations. Please reach out to us directly so we can make this right for you.`,
-        1: `We are truly sorry for your experience and take your concerns very seriously. Please contact us directly — we want to personally address what happened and make this right.`
-      };
-      responseEl.textContent = fallbacks[r] || fallbacks[3];
-      result.style.display = 'block';
-    }
+    const fallbacks = { 5: "Thank you so much for the wonderful review! Your kind words mean everything to our team.", 4: "Thank you for the great feedback! We'll work on your suggestions to make your next visit even better!", 3: "Thank you for sharing. We're sorry it wasn't perfect — we'd love to have you back.", 2: "We sincerely apologize. Please reach out directly so we can make this right.", 1: "We are truly sorry. Please contact us directly — we want to personally address what happened." };
+    responseEl.textContent = fallbacks[parseInt(rating)] || fallbacks[3];
+    result.style.display = 'block';
   }
-
   btn.disabled = false;
-  btn.textContent = '✨ Generate AI Response';
+  btn.textContent = '\u2728 Generate AI Response';
 }
 
 function copyResponse() {
   const text = document.getElementById('ai-response-text').textContent;
   navigator.clipboard?.writeText(text);
-  showToast('📋 Copied to clipboard!');
+  showToast('\uD83D\uDCCB Copied to clipboard!');
 }
 
-// ─────────────────────────────────────────────
-// TEMPLATES
-// ─────────────────────────────────────────────
 const templates = [
-  { name: 'Warm Thank You — 5 Stars', category: 'positive', text: 'Thank you so much, [Name]! Your kind words truly made our day. We\'re thrilled you had such a wonderful experience and can\'t wait to welcome you back soon! 💅' },
-  { name: 'Apologetic — Wait Time', category: 'negative', text: 'Thank you for your feedback, [Name]. We sincerely apologize for the wait time during your visit. This is not the experience we aim to provide and we are actively working to improve. We hope you\'ll give us another chance.' },
-  { name: 'Address Complaint', category: 'negative', text: 'Thank you for bringing this to our attention, [Name]. We take feedback like yours very seriously. Please reach out to us directly at [email] so we can personally address your concerns.' },
+  { name: 'Warm Thank You \u2014 5 Stars', category: 'positive', text: "Thank you so much, [Name]! Your kind words truly made our day. We're thrilled you had such a wonderful experience and can't wait to welcome you back soon!" },
+  { name: 'Apologetic \u2014 Wait Time', category: 'negative', text: "Thank you for your feedback, [Name]. We sincerely apologize for the wait time. This is not the experience we aim to provide and we are actively working to improve." },
+  { name: 'Address Complaint', category: 'negative', text: "Thank you for bringing this to our attention, [Name]. Please reach out to us directly at [email] so we can personally address your concerns." },
 ];
 
 function renderTemplates() {
@@ -905,12 +736,9 @@ function useTemplate(i) {
   showToast('Template loaded! Add the review above and click generate.');
 }
 
-// ─────────────────────────────────────────────
-// ALERT SETTINGS
-// ─────────────────────────────────────────────
 const alertSettings = [
-  { key: 'negative', label: 'New negative review (3★ or below)', desc: 'Instant alert when a bad review comes in', enabled: true, urgent: true },
-  { key: 'pending24', label: 'Unanswered review > 24 hours', desc: 'Reminder if you haven\'t responded to a negative review', enabled: true, urgent: true },
+  { key: 'negative', label: 'New negative review (3\u2605 or below)', desc: 'Instant alert when a bad review comes in', enabled: true, urgent: true },
+  { key: 'pending24', label: 'Unanswered review > 24 hours', desc: "Reminder if you haven't responded to a negative review", enabled: true, urgent: true },
   { key: 'ratingdrop', label: 'Rating drops more than 0.2 stars', desc: 'Alert if your average drops significantly', enabled: true, urgent: false },
   { key: 'positive', label: 'New 5-star review', desc: 'Celebrate every win', enabled: false, urgent: false },
   { key: 'weekly', label: 'Weekly performance summary', desc: 'Monday morning digest', enabled: true, urgent: false },
@@ -937,46 +765,23 @@ function renderAlertSettings() {
 
 function toggleAlert(i) {
   alertSettings[i].enabled = !alertSettings[i].enabled;
-  const toggle = document.getElementById(`toggle-${i}`);
-  const knob = document.getElementById(`toggle-knob-${i}`);
-  toggle.style.background = alertSettings[i].enabled ? 'var(--gold)' : 'rgba(255,255,255,0.08)';
-  knob.style.left = alertSettings[i].enabled ? '22px' : '2px';
-  showToast(alertSettings[i].enabled ? '🔔 Alert enabled' : '🔕 Alert disabled');
+  document.getElementById(`toggle-${i}`).style.background = alertSettings[i].enabled ? 'var(--gold)' : 'rgba(255,255,255,0.08)';
+  document.getElementById(`toggle-knob-${i}`).style.left = alertSettings[i].enabled ? '22px' : '2px';
+  showToast(alertSettings[i].enabled ? '\uD83D\uDD14 Alert enabled' : '\uD83D\uDD15 Alert disabled');
 }
 
-// ─────────────────────────────────────────────
-// SETTINGS SAVE
-// ─────────────────────────────────────────────
 async function saveBusiness() {
   const btn = document.getElementById('save-biz-btn');
   btn.disabled = true; btn.textContent = 'Saving...';
-
-  const bizData = {
-    name: document.getElementById('biz-name').value,
-    type: document.getElementById('biz-type').value,
-    google_url: document.getElementById('biz-google').value,
-    alert_email: document.getElementById('biz-email').value,
-    alert_phone: document.getElementById('biz-phone').value,
-  };
-
+  const bizData = { name: document.getElementById('biz-name').value, type: document.getElementById('biz-type').value, google_url: document.getElementById('biz-google').value, alert_email: document.getElementById('biz-email').value, alert_phone: document.getElementById('biz-phone').value };
   try {
-    await fetch(`${API}/businesses`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify(bizData)
-    });
-    showToast('✓ Business saved!');
+    await fetch(`${API}/businesses`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(bizData) });
+    showToast('\u2713 Business saved!');
     document.getElementById('setup-banner').style.display = 'none';
-  } catch(e) {
-    showToast('✓ Business saved locally!');
-  }
-
+  } catch(e) { showToast('\u2713 Business saved locally!'); }
   btn.disabled = false; btn.textContent = 'Save Business';
 }
 
-// ─────────────────────────────────────────────
-// TOAST
-// ─────────────────────────────────────────────
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
