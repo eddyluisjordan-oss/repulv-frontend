@@ -37,14 +37,12 @@
     min-height: 100vh;
   }
 
-  /* ─── LAYOUT ─── */
   .page {
     max-width: 1100px;
     margin: 0 auto;
     padding: 60px 24px 100px;
   }
 
-  /* ─── HEADER ─── */
   .page-header {
     margin-bottom: 56px;
     text-align: center;
@@ -73,7 +71,6 @@
     margin: 0 auto;
   }
 
-  /* ─── CURRENT PLAN BANNER ─── */
   .current-plan-bar {
     background: var(--surface2);
     border: 1px solid var(--border);
@@ -118,7 +115,6 @@
   .manage-btn:hover { background: rgba(201,168,76,0.08); }
   .manage-btn.visible { display: inline-block; }
 
-  /* ─── PLANS GRID ─── */
   .plans-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -135,16 +131,13 @@
     flex-direction: column;
     position: relative;
     transition: border-color 0.2s, transform 0.2s;
-    cursor: default;
   }
   .plan-card:hover { border-color: var(--border-hover); }
   .plan-card.featured {
     border: 1.5px solid var(--gold);
     background: linear-gradient(160deg, #161208 0%, var(--surface) 60%);
   }
-  .plan-card.current-active {
-    border-color: var(--success);
-  }
+  .plan-card.current-active { border-color: var(--success); }
 
   .plan-badge {
     position: absolute;
@@ -161,10 +154,7 @@
     border-radius: 20px;
     white-space: nowrap;
   }
-  .plan-badge.active-badge {
-    background: var(--success);
-    color: #fff;
-  }
+  .plan-badge.active-badge { background: var(--success); color: #fff; }
 
   .plan-name {
     font-family: 'Playfair Display', serif;
@@ -189,11 +179,7 @@
   .plan-price .amount { font-size: 48px; font-weight: 300; color: var(--text); line-height: 1; }
   .plan-price .period { font-size: 14px; color: var(--text-muted); align-self: flex-end; margin-bottom: 6px; }
 
-  .plan-divider {
-    height: 1px;
-    background: var(--border);
-    margin-bottom: 24px;
-  }
+  .plan-divider { height: 1px; background: var(--border); margin-bottom: 24px; }
 
   .plan-features {
     list-style: none;
@@ -225,7 +211,6 @@
   .plan-features li .check svg { width: 9px; height: 9px; stroke: var(--gold); }
   .plan-features li strong { color: var(--text); font-weight: 500; }
 
-  /* ─── CTA BUTTON ─── */
   .cta-btn {
     display: block;
     width: 100%;
@@ -242,32 +227,27 @@
   }
   .cta-btn:hover { opacity: 0.88; }
   .cta-btn:active { transform: scale(0.98); }
+  .cta-btn.gold { background: var(--gold); color: #0A0A0A; }
+  .cta-btn.outline { background: transparent; border: 1px solid var(--border-hover); color: var(--gold); }
+  .cta-btn.current { background: rgba(76,175,116,0.12); border: 1px solid rgba(76,175,116,0.35); color: var(--success); cursor: default; }
+  .cta-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+  .cta-btn.loading::after { content: ' …'; }
 
-  .cta-btn.gold {
-    background: var(--gold);
-    color: #0A0A0A;
+  /* Contact hint under Enterprise button */
+  .cta-hint {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-dim);
   }
-  .cta-btn.outline {
-    background: transparent;
-    border: 1px solid var(--border-hover);
-    color: var(--gold);
+  .cta-hint a {
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    transition: color 0.15s;
   }
-  .cta-btn.current {
-    background: rgba(76,175,116,0.12);
-    border: 1px solid rgba(76,175,116,0.35);
-    color: var(--success);
-    cursor: default;
-  }
-  .cta-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none !important;
-  }
-  .cta-btn.loading::after {
-    content: ' …';
-  }
+  .cta-hint a:hover { color: var(--gold); }
 
-  /* ─── FAQ / INFO ─── */
   .info-section {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -294,7 +274,6 @@
   .info-card h3 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
   .info-card p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
 
-  /* ─── TOAST ─── */
   #toast {
     position: fixed;
     bottom: 28px;
@@ -313,7 +292,6 @@
   }
   #toast.show { transform: translateX(-50%) translateY(0); }
 
-  /* ─── RESPONSIVE ─── */
   @media (max-width: 640px) {
     .current-plan-bar { flex-direction: column; align-items: flex-start; }
     .plans-grid { grid-template-columns: 1fr; }
@@ -324,14 +302,12 @@
 
 <div class="page">
 
-  <!-- Header -->
   <div class="page-header">
     <div class="eyebrow">Subscription</div>
     <h1>Your <span>RepuLV</span> Plan</h1>
     <p>Protect your reputation 24/7. Upgrade or manage your plan anytime.</p>
   </div>
 
-  <!-- Current Plan Bar -->
   <div class="current-plan-bar">
     <div>
       <div class="label">Current Plan</div>
@@ -340,7 +316,6 @@
     <button class="manage-btn" id="manage-btn" onclick="openPortal()">Manage Billing →</button>
   </div>
 
-  <!-- Plans -->
   <div class="plans-grid">
 
     <!-- STARTER -->
@@ -403,12 +378,12 @@
         <li><span class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span>Custom AI response voice & tone</span></li>
         <li><span class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span>Weekly strategy call</span></li>
       </ul>
-      <button class="cta-btn outline" id="btn-enterprise" onclick="contactSales()">Contact Sales</button>
+      <button class="cta-btn outline" id="btn-enterprise" onclick="subscribe('enterprise')">Get Enterprise</button>
+      <p class="cta-hint">Questions first? <a href="mailto:repulv@gmail.com?subject=RepuLV%20Enterprise%20Inquiry">Email us</a></p>
     </div>
 
   </div>
 
-  <!-- Info Cards -->
   <div class="info-section">
     <div class="info-card">
       <div class="icon">
@@ -435,11 +410,9 @@
 
 </div>
 
-<!-- Toast -->
 <div id="toast"></div>
 
 <script>
-  // ── CONFIG ──
   const API_BASE = 'https://repulv-backend-production.up.railway.app';
 
   const PLANS = {
@@ -448,7 +421,6 @@
     enterprise: { name: 'Enterprise', priceId: 'price_1TYAoCFn3MyMh9kiaIeXhYoT' }
   };
 
-  // ── HELPERS ──
   function getToken() {
     return localStorage.getItem('repulv_token') || sessionStorage.getItem('repulv_token');
   }
@@ -468,7 +440,6 @@
     if (!isLoading) btn.classList.remove('loading');
   }
 
-  // ── LOAD CURRENT PLAN ──
   async function loadCurrentPlan() {
     const token = getToken();
     if (!token) return;
@@ -480,28 +451,23 @@
       if (!res.ok) return;
       const data = await res.json();
 
-      const plan = data.plan; // 'starter' | 'pro' | 'enterprise' | null
+      const plan = data.plan;
       if (!plan) return;
 
       const planInfo = PLANS[plan];
       if (!planInfo) return;
 
-      // Update banner
       const display = document.getElementById('current-plan-display');
       display.textContent = planInfo.name;
       display.classList.remove('free');
 
-      // Show manage button
       document.getElementById('manage-btn').classList.add('visible');
 
-      // Highlight active card
       const card = document.getElementById('card-' + plan);
       if (card) {
         card.classList.add('current-active');
-        // Remove featured gold border if it's pro
         card.classList.remove('featured');
 
-        // Swap badge
         const badge = document.getElementById('badge-' + plan);
         if (badge) {
           badge.textContent = 'Current Plan';
@@ -514,7 +480,6 @@
           card.prepend(newBadge);
         }
 
-        // Update CTA
         const btn = document.getElementById('btn-' + plan);
         if (btn) {
           btn.textContent = 'Current Plan';
@@ -527,7 +492,6 @@
     }
   }
 
-  // ── SUBSCRIBE ──
   async function subscribe(planKey) {
     const token = getToken();
     if (!token) {
@@ -563,7 +527,6 @@
     }
   }
 
-  // ── MANAGE PORTAL ──
   async function openPortal() {
     const token = getToken();
     if (!token) return;
@@ -591,14 +554,6 @@
     }
   }
 
-  // ── CONTACT SALES ──
-  function contactSales() {
-    const subject = encodeURIComponent("RepuLV Enterprise Inquiry");
-    const body = encodeURIComponent("Hi,\n\nI am interested in RepuLV Enterprise ($599/month) for my business.\n\nBusiness name: \nNumber of locations: \nBest time to reach me: \n\nPlease contact me to get started.\n\nThank you");
-    window.location.href = "mailto:repulv@gmail.com?subject=" + subject + "&body=" + body;
-  }
-
-  // ── INIT ──
   loadCurrentPlan();
 </script>
 </body>
