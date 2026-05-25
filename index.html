@@ -802,11 +802,28 @@
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
   // Form submission
-  function handleSubmit(btn) {
-    btn.textContent = '✓ Request Received — We\'ll contact you within 2 hours!';
-    btn.style.background = '#2d6a2d';
-    btn.style.color = '#fff';
+  async function handleSubmit(btn) {
+    const form = btn.closest('.contact-form');
+    const inputs = form.querySelectorAll('input, select');
+    const name = inputs[0].value.trim();
+    const business = inputs[1].value.trim();
+    const phone = inputs[2].value.trim();
+    const email = inputs[3].value.trim();
+    const type = inputs[4].value;
+    const rating = inputs[5].value.trim();
+    if (!name || !email || !phone) { alert('Please fill in your name, phone, and email.'); return; }
+    btn.textContent = 'Sending...';
     btn.disabled = true;
+    try {
+      await fetch('https://repulv-backend-production.up.railway.app/leads', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, business, phone, email, type, rating })
+      });
+    } catch(e) {}
+    btn.textContent = '✓ Got it! Redirecting you now...';
+    btn.style.background = '#22c55e';
+    btn.style.color = '#fff';
+    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
   }
 
   // Smooth scroll
