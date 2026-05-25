@@ -495,8 +495,7 @@
   async function subscribe(planKey) {
     const token = getToken();
     if (!token) {
-      toast('Please log in to subscribe.');
-      setTimeout(() => { window.location.href = '/dashboard.html'; }, 1500);
+      window.location.href = 'dashboard.html?plan=' + planKey;
       return;
     }
 
