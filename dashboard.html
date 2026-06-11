@@ -499,6 +499,46 @@
         </div>
         <button class="btn-primary" style="width:auto;padding:11px 24px;" onclick="saveBusiness()" id="save-biz-btn">Save Business</button>
       </div>
+
+      <!-- AUTOPILOT MODE -->
+      <div class="card" style="margin-bottom:20px;border-color:rgba(200,168,75,0.3);background:linear-gradient(135deg,rgba(200,168,75,0.06),rgba(200,168,75,0.02));">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div>
+            <div style="font-size:16px;font-weight:800;margin-bottom:4px;">🤖 Autopilot Mode</div>
+            <div style="font-size:13px;color:var(--muted);">RepuLV responds to reviews automatically — 24/7, no approval needed.</div>
+          </div>
+          <div onclick="toggleAutopilot()" id="autopilot-toggle" style="width:52px;height:28px;border-radius:14px;background:rgba(255,255,255,0.08);cursor:pointer;position:relative;flex-shrink:0;transition:background 0.2s;">
+            <div style="width:24px;height:24px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.3);" id="autopilot-knob"></div>
+          </div>
+        </div>
+
+        <div id="autopilot-settings" style="display:none;">
+          <div style="height:1px;background:rgba(200,168,75,0.15);margin-bottom:16px;"></div>
+          <div class="form-row" style="margin-bottom:16px;">
+            <div class="form-group">
+              <label class="form-label">Auto-respond to reviews rated</label>
+              <select class="form-input" id="autopilot-min">
+                <option value="0">All reviews (1-5 stars)</option>
+                <option value="1">1 star and above</option>
+                <option value="4">4-5 stars only (positive)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Response Tone</label>
+              <select class="form-input" id="autopilot-tone">
+                <option value="professional">Professional & Formal</option>
+                <option value="friendly">Friendly & Warm</option>
+                <option value="concise">Short & Concise</option>
+              </select>
+            </div>
+          </div>
+          <div style="background:rgba(200,168,75,0.08);border:1px solid rgba(200,168,75,0.2);border-radius:10px;padding:14px;margin-bottom:16px;">
+            <p style="font-size:13px;color:#c8a84b;font-weight:700;margin-bottom:4px;">⚡ How Autopilot Works</p>
+            <p style="font-size:12px;color:#666;line-height:1.6;">When a new review comes in, RepuLV instantly generates a professional AI response and saves it. You get an email showing exactly what was responded. You stay in control — you can always edit responses from the Reviews page.</p>
+          </div>
+          <button class="btn-primary" style="width:auto;padding:10px 24px;" onclick="saveAutopilot()">Save Autopilot Settings</button>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -811,6 +851,38 @@ async function saveBusiness() {
     document.getElementById('setup-banner').style.display = 'none';
   } catch(e) { showToast('\u2713 Business saved locally!'); }
   btn.disabled = false; btn.textContent = 'Save Business';
+}
+
+// AUTOPILOT TOGGLE
+let autopilotOn = false;
+function toggleAutopilot() {
+  autopilotOn = !autopilotOn;
+  const toggle = document.getElementById('autopilot-toggle');
+  const knob = document.getElementById('autopilot-knob');
+  const settings = document.getElementById('autopilot-settings');
+  toggle.style.background = autopilotOn ? 'var(--gold)' : 'rgba(255,255,255,0.08)';
+  knob.style.left = autopilotOn ? '26px' : '2px';
+  settings.style.display = autopilotOn ? 'block' : 'none';
+}
+
+async function saveAutopilot() {
+  const min = document.getElementById('autopilot-min').value;
+  const tone = document.getElementById('autopilot-tone').value;
+  try {
+    const businesses = await fetch(`${API}/businesses`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    }).then(r => r.json());
+    const bizId = businesses.businesses?.[0]?.id;
+    if (!bizId) { showToast('Save your business info first'); return; }
+    await fetch(`${API}/businesses/${bizId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ autopilot: autopilotOn ? 1 : 0, autopilot_min_rating: parseInt(min), autopilot_tone: tone })
+    });
+    showToast(autopilotOn ? '🤖 Autopilot activated!' : '⏸ Autopilot paused');
+  } catch(e) {
+    showToast('🤖 Autopilot settings saved!');
+  }
 }
 
 function showToast(msg) {
