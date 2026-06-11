@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RepuLV Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#c8a84b;--gold-light:#f5d98e;--bg:#08080f;--surface:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.07);--text:#e8e6f0;--muted:#555;--green:#22c55e;--red:#ef4444;--yellow:#eab308}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 0%,rgba(200,168,75,0.08) 0%,transparent 70%)}
+.login-card{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:24px;padding:40px;width:100%;max-width:380px;text-align:center}
+.login-logo{font-size:28px;font-weight:900;color:var(--gold);margin-bottom:8px}
+.login-sub{color:var(--muted);font-size:13px;margin-bottom:32px}
+.form-input{width:100%;padding:12px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:var(--text);font-size:14px;font-family:inherit;outline:none;margin-bottom:12px}
+.form-input:focus{border-color:var(--gold)}
+.btn-primary{width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#0a0a0f;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit}
+.error-msg{color:var(--red);font-size:13px;margin-bottom:12px;display:none}
+#admin-screen{display:none}
+.topbar{background:rgba(255,255,255,0.02);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;justify-content:space-between}
+.topbar-badge{background:rgba(200,168,75,0.15);color:var(--gold);font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:0.08em;text-transform:uppercase;margin-left:10px}
+.logout-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit}
+.logout-btn:hover{color:var(--red);border-color:var(--red)}
+.main{padding:32px;max-width:1400px;margin:0 auto}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px}
+.stat-label{font-size:11px;font-weight:700;color:#666;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:8px}
+.stat-value{font-size:36px;font-weight:900;letter-spacing:-1px}
+.stat-sub{font-size:12px;color:var(--muted);margin-top:4px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px;overflow-x:auto}
+.search-bar{display:flex;gap:12px;margin-bottom:20px;align-items:center}
+.search-input{flex:1;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;font-family:inherit;outline:none}
+.search-input:focus{border-color:var(--gold)}
+.filter-select{padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:13px;font-family:inherit;outline:none;cursor:pointer}
+.users-table{width:100%;border-collapse:collapse}
+.users-table th{text-align:left;padding:12px 16px;font-size:11px;font-weight:700;color:#555;letter-spacing:0.5px;text-transform:uppercase;border-bottom:1px solid var(--border)}
+.users-table td{padding:14px 16px;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.03);vertical-align:middle}
+.users-table tr:hover td{background:rgba(255,255,255,0.02)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-green{background:rgba(34,197,94,0.1);color:var(--green)}
+.badge-red{background:rgba(239,68,68,0.1);color:var(--red)}
+.badge-yellow{background:rgba(234,179,8,0.1);color:var(--yellow)}
+.badge-gold{background:rgba(200,168,75,0.1);color:var(--gold)}
+.badge-gray{background:rgba(255,255,255,0.06);color:var(--muted)}
+.action-btn{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;border:1px solid;font-family:inherit;margin-right:4px;transition:all 0.15s}
+.btn-extend{border-color:rgba(200,168,75,0.3);background:rgba(200,168,75,0.08);color:var(--gold)}
+.btn-extend:hover{background:rgba(200,168,75,0.15)}
+.btn-delete{border-color:rgba(239,68,68,0.2);background:transparent;color:#666}
+.btn-delete:hover{border-color:var(--red);color:var(--red)}
+.empty{text-align:center;padding:40px;color:var(--muted);font-size:14px}
+.toast{position:fixed;bottom:24px;right:24px;background:rgba(15,15,26,0.95);border:1px solid rgba(200,168,75,0.3);border-radius:12px;padding:14px 20px;font-size:13px;color:var(--text);z-index:9999;transform:translateY(100px);opacity:0;transition:all 0.3s}
+.toast.show{transform:translateY(0);opacity:1}
+@media(max-width:768px){.stats-grid{grid-template-columns:1fr 1fr}.main{padding:16px}}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">RepuLV</div>
+    <div class="login-sub">Admin Access Only</div>
+    <div class="error-msg" id="login-error">Invalid credentials or not an admin.</div>
+    <input type="email" class="form-input" id="admin-email" placeholder="Email" value="repulv@gmail.com">
+    <input type="password" class="form-input" id="admin-password" placeholder="Password">
+    <button class="btn-primary" onclick="adminLogin()">Access Admin Dashboard</button>
+  </div>
+</div>
+<div id="admin-screen">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;">
+      <span style="font-size:20px;font-weight:900;">Repu<span style="color:var(--gold);">LV</span></span>
+      <span class="topbar-badge">Admin</span>
+    </div>
+    <button class="logout-btn" onclick="adminLogout()">Sign Out</button>
+  </div>
+  <div class="main">
+    <div style="margin-bottom:28px;">
+      <h1 style="font-size:24px;font-weight:900;letter-spacing:-0.5px;">Admin Dashboard</h1>
+      <p style="color:var(--muted);font-size:14px;margin-top:4px;" id="last-updated">Loading...</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">Total Users</div><div class="stat-value" id="stat-users">-</div><div class="stat-sub">All accounts</div></div>
+      <div class="stat-card"><div class="stat-label">Active Trials</div><div class="stat-value" style="color:var(--yellow);" id="stat-trials">-</div><div class="stat-sub">Not yet converted</div></div>
+      <div class="stat-card"><div class="stat-label">Paid Customers</div><div class="stat-value" style="color:var(--green);" id="stat-paid">-</div><div class="stat-sub">Active subscriptions</div></div>
+      <div class="stat-card"><div class="stat-label">Est. MRR</div><div class="stat-value" style="color:var(--green);" id="stat-mrr">-</div><div class="stat-sub">Monthly recurring revenue</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;">
+      <div class="stat-card"><div class="stat-label">Businesses</div><div class="stat-value" style="font-size:28px;" id="stat-biz">-</div></div>
+      <div class="stat-card"><div class="stat-label">Total Reviews</div><div class="stat-value" style="font-size:28px;" id="stat-reviews">-</div></div>
+      <div class="stat-card"><div class="stat-label">Responses</div><div class="stat-value" style="font-size:28px;" id="stat-responded">-</div></div>
+      <div class="stat-card"><div class="stat-label">Expired Trials</div><div class="stat-value" style="font-size:28px;color:var(--red);" id="stat-expired">-</div><div class="stat-sub">Re-engage these</div></div>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <h2 style="font-size:18px;font-weight:800;">All Users</h2>
+        <button class="btn-primary" style="width:auto;padding:8px 18px;font-size:13px;" onclick="loadData()">Refresh</button>
+      </div>
+      <div class="search-bar">
+        <input type="text" class="search-input" id="search" placeholder="Search by name or email..." oninput="filterUsers()">
+        <select class="filter-select" id="filter-status" onchange="filterUsers()">
+          <option value="all">All Users</option>
+          <option value="active">Paid</option>
+          <option value="trial">Trial</option>
+          <option value="expired">Expired</option>
+        </select>
+      </div>
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>ID</th><th>Name</th><th>Email</th><th>Status</th><th>Plan</th>
+            <th>Trial Expires</th><th>Businesses</th><th>Joined</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="users-tbody"><tr><td colspan="9" class="empty">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script>
+const API='https://repulv-backend-production.up.railway.app';
+let adminToken=localStorage.getItem('repulv_admin_token');
+let allUsers=[];
+window.addEventListener('DOMContentLoaded',()=>{if(adminToken)tryLoadAdmin();else showLogin();});
+function showLogin(){document.getElementById('login-screen').style.display='flex';document.getElementById('admin-screen').style.display='none';}
+async function adminLogin(){
+  const email=document.getElementById('admin-email').value;
+  const password=document.getElementById('admin-password').value;
+  const err=document.getElementById('login-error');
+  err.style.display='none';
+  try{
+    const res=await fetch(`${API}/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+    const data=await res.json();
+    if(data.token&&data.user.role==='admin'){
+      adminToken=data.token;
+      localStorage.setItem('repulv_admin_token',adminToken);
+      document.getElementById('login-screen').style.display='none';
+      document.getElementById('admin-screen').style.display='block';
+      loadData();
+    }else{err.style.display='block';}
+  }catch(e){err.style.display='block';}
+}
+async function tryLoadAdmin(){
+  try{
+    const res=await fetch(`${API}/auth/me`,{headers:{'Authorization':`Bearer ${adminToken}`}});
+    const data=await res.json();
+    if(data.user?.role==='admin'){
+      document.getElementById('login-screen').style.display='none';
+      document.getElementById('admin-screen').style.display='block';
+      loadData();
+    }else{localStorage.removeItem('repulv_admin_token');showLogin();}
+  }catch(e){showLogin();}
+}
+function adminLogout(){localStorage.removeItem('repulv_admin_token');adminToken=null;showLogin();}
+async function loadData(){
+  document.getElementById('last-updated').textContent='Updated: '+new Date().toLocaleTimeString();
+  try{
+    const res=await fetch(`${API}/admin/stats`,{headers:{'Authorization':`Bearer ${adminToken}`}});
+    const d=await res.json();
+    document.getElementById('stat-users').textContent=d.users||0;
+    document.getElementById('stat-trials').textContent=d.trials||0;
+    document.getElementById('stat-paid').textContent=d.paid||0;
+    document.getElementById('stat-mrr').textContent='$'+(d.mrr_estimate||0).toLocaleString();
+    document.getElementById('stat-biz').textContent=d.businesses||0;
+    document.getElementById('stat-reviews').textContent=d.reviews||0;
+    document.getElementById('stat-responded').textContent=d.responded||0;
+    document.getElementById('stat-expired').textContent=d.expired||0;
+  }catch(e){console.error(e);}
+  try{
+    const res=await fetch(`${API}/admin/users`,{headers:{'Authorization':`Bearer ${adminToken}`}});
+    const d=await res.json();
+    allUsers=d.users||[];
+    renderUsers(allUsers);
+  }catch(e){console.error(e);}
+}
+function getStatusBadge(u){
+  if(u.subscription_status==='active')return '<span class="badge badge-green">Paid</span>';
+  if(!u.trial_expires_at)return '<span class="badge badge-yellow">Trial</span>';
+  const expired=new Date(u.trial_expires_at)<new Date();
+  if(expired)return '<span class="badge badge-red">Expired</span>';
+  const days=Math.ceil((new Date(u.trial_expires_at)-new Date())/(1000*60*60*24));
+  return `<span class="badge badge-yellow">Trial ${days}d</span>`;
+}
+function fmt(d){if(!d)return '-';return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+function renderUsers(users){
+  const tbody=document.getElementById('users-tbody');
+  if(!users.length){tbody.innerHTML='<tr><td colspan="9" class="empty">No users found</td></tr>';return;}
+  tbody.innerHTML=users.map(u=>`
+    <tr>
+      <td style="color:var(--muted)">#${u.id}</td>
+      <td style="font-weight:700">${u.name||'-'}</td>
+      <td style="color:var(--muted)">${u.email}</td>
+      <td>${getStatusBadge(u)}</td>
+      <td>${u.plan?`<span class="badge badge-gold">${u.plan}</span>`:'<span class="badge badge-gray">none</span>'}</td>
+      <td style="color:var(--muted);font-size:12px">${fmt(u.trial_expires_at)}</td>
+      <td style="text-align:center">${u.business_count||0}</td>
+      <td style="color:var(--muted);font-size:12px">${fmt(u.created_at)}</td>
+      <td>
+        <button class="action-btn btn-extend" onclick="extendTrial(${u.id},'${u.name}')">+7 Days</button>
+        <button class="action-btn btn-delete" onclick="deleteUser(${u.id},'${u.name}')">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+function filterUsers(){
+  const search=document.getElementById('search').value.toLowerCase();
+  const status=document.getElementById('filter-status').value;
+  let f=allUsers.filter(u=>{
+    const ms=!search||(u.name||'').toLowerCase().includes(search)||u.email.toLowerCase().includes(search);
+    let mst=true;
+    if(status==='active')mst=u.subscription_status==='active';
+    else if(status==='trial')mst=u.subscription_status!=='active'&&(!u.trial_expires_at||new Date(u.trial_expires_at)>new Date());
+    else if(status==='expired')mst=u.subscription_status!=='active'&&u.trial_expires_at&&new Date(u.trial_expires_at)<new Date();
+    return ms&&mst;
+  });
+  renderUsers(f);
+}
+async function extendTrial(id,name){
+  await fetch(`${API}/admin/users/${id}/extend-trial`,{method:'POST',headers:{'Authorization':`Bearer ${adminToken}`}});
+  showToast(`Trial extended for ${name}`);
+  loadData();
+}
+async function deleteUser(id,name){
+  if(!confirm(`Delete ${name}? Cannot be undone.`))return;
+  await fetch(`${API}/admin/users/${id}`,{method:'DELETE',headers:{'Authorization':`Bearer ${adminToken}`}});
+  showToast(`Deleted ${name}`);
+  loadData();
+}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+</script>
+</body>
+</html>
