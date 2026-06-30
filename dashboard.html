@@ -277,6 +277,9 @@
     <button class="nav-item" onclick="window.location.href='qr-generator.html'" id="nav-qr">
       <span class="nav-icon">&#128247;</span> QR Code
     </button>
+    <button class="nav-item" onclick="showPage('campaigns')" id="nav-campaigns">
+      <span class="nav-icon">&#128140;</span> Campaigns
+    </button>
 
     <div class="sidebar-bottom">
       <div class="user-info">
@@ -630,6 +633,42 @@
           </div>
           <button class="btn-primary" style="width:auto;padding:10px 24px;" onclick="saveAutopilot()">Save Autopilot Settings</button>
         </div>
+      </div>
+    </div>
+
+    <!-- CAMPAIGNS PAGE -->
+    <div class="page" id="page-campaigns">
+      <h1 class="page-title">Review Request Campaigns</h1>
+      <p class="page-sub">Send customers a friendly email asking them to leave a review</p>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-title" style="margin-bottom:16px;">Send a Review Request</div>
+        <div class="form-row" style="margin-bottom:16px;">
+          <div class="form-group">
+            <label class="form-label">Customer Name</label>
+            <input type="text" class="form-input" id="camp-name" placeholder="Maria Garcia">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Customer Email</label>
+            <input type="email" class="form-input" id="camp-email" placeholder="maria@email.com">
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+          <button class="btn-primary" style="width:auto;padding:11px 24px;" onclick="sendReviewRequest()" id="camp-btn">&#128140; Send Review Request</button>
+          <span style="font-size:13px;color:var(--muted);">Customer gets a friendly email with your Google review link</span>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-title" style="margin-bottom:4px;">Bulk Send</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">One customer per line: Name, Email</p>
+        <textarea class="form-input" id="camp-bulk" rows="5" placeholder="Maria Garcia, maria@email.com&#10;John Smith, john@email.com" style="resize:vertical;margin-bottom:16px;"></textarea>
+        <button class="btn-primary" style="width:auto;padding:11px 24px;" onclick="sendBulkRequests()" id="bulk-btn">&#128140; Send to All</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:16px;">Campaign History</div>
+        <div id="campaigns-list"><p style="color:var(--muted);font-size:14px;text-align:center;padding:20px;">No campaigns sent yet.</p></div>
       </div>
     </div>
 
@@ -1091,6 +1130,104 @@ async function doForgotPassword() {
     success.style.display = 'block';
     btn.textContent = 'Sent!';
   }
+}
+
+// CAMPAIGNS
+async function sendReviewRequest() {
+  const name = document.getElementById('camp-name').value.trim();
+  const email = document.getElementById('camp-email').value.trim();
+  const btn = document.getElementById('camp-btn');
+  if (!name || !email) { showToast('Please enter customer name and email'); return; }
+
+  btn.disabled = true; btn.textContent = 'Sending...';
+  try {
+    const businesses = await fetch(`${API}/businesses`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    }).then(r => r.json());
+    const bizId = businesses.businesses?.[0]?.id;
+    if (!bizId) { showToast('Add your business info in Settings first'); btn.disabled = false; btn.textContent = '📬 Send Review Request'; return; }
+
+    const res = await fetch(`${API}/campaigns/send-review-request`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ customer_name: name, customer_email: email, business_id: bizId })
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast('✓ Review request sent to ' + email);
+      document.getElementById('camp-name').value = '';
+      document.getElementById('camp-email').value = '';
+      loadCampaigns();
+    } else {
+      showToast('Error: ' + (data.error || 'Failed to send'));
+    }
+  } catch(e) {
+    showToast('Error sending request');
+  }
+  btn.disabled = false; btn.textContent = '📬 Send Review Request';
+}
+
+async function sendBulkRequests() {
+  const bulk = document.getElementById('camp-bulk').value.trim();
+  const btn = document.getElementById('bulk-btn');
+  if (!bulk) { showToast('Please enter at least one customer'); return; }
+
+  const lines = bulk.split('
+').filter(l => l.trim());
+  const customers = lines.map(l => {
+    const parts = l.split(',');
+    return { name: parts[0]?.trim(), email: parts[1]?.trim() };
+  }).filter(c => c.name && c.email);
+
+  if (!customers.length) { showToast('Format: Name, Email — one per line'); return; }
+
+  btn.disabled = true; btn.textContent = 'Sending...';
+  try {
+    const businesses = await fetch(`${API}/businesses`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    }).then(r => r.json());
+    const bizId = businesses.businesses?.[0]?.id;
+    if (!bizId) { showToast('Add your business info in Settings first'); btn.disabled = false; btn.textContent = '📬 Send to All'; return; }
+
+    const res = await fetch(`${API}/campaigns/bulk`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ customers, business_id: bizId })
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast(`✓ Sent ${data.sent} review requests!`);
+      document.getElementById('camp-bulk').value = '';
+      loadCampaigns();
+    }
+  } catch(e) { showToast('Error sending bulk requests'); }
+  btn.disabled = false; btn.textContent = '📬 Send to All';
+}
+
+async function loadCampaigns() {
+  try {
+    const res = await fetch(`${API}/campaigns`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    const list = document.getElementById('campaigns-list');
+    if (!data.campaigns?.length) {
+      list.innerHTML = '<p style="color:var(--muted);font-size:14px;text-align:center;padding:20px;">No campaigns sent yet.</p>';
+      return;
+    }
+    list.innerHTML = data.campaigns.map(c => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-weight:700;font-size:14px;">${c.customer_name}</div>
+          <div style="font-size:12px;color:var(--muted);">${c.customer_email}</div>
+        </div>
+        <div style="text-align:right;">
+          <span class="badge badge-green">&#10003; Sent</span>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">${new Date(c.sent_at).toLocaleDateString()}</div>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {}
 }
 
 function showToast(msg) {
