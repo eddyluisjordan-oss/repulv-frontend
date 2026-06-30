@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics — RepuLV</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#c8a84b;--gold-light:#f5d98e;--bg:#08080f;--surface:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.07);--text:#e8e6f0;--muted:#555;--green:#22c55e;--red:#ef4444;--yellow:#eab308}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.topbar{background:rgba(255,255,255,0.02);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;justify-content:space-between}
+.topbar-logo{font-size:20px;font-weight:900}
+.topbar-logo span{color:var(--gold)}
+.back-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.back-btn:hover{color:var(--text);border-color:rgba(255,255,255,0.15)}
+.main{padding:32px;max-width:1300px;margin:0 auto}
+.page-title{font-size:24px;font-weight:900;letter-spacing:-0.5px;margin-bottom:4px}
+.page-sub{color:var(--muted);font-size:14px;margin-bottom:32px}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px}
+.stat-label{font-size:11px;font-weight:700;color:#666;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:8px}
+.stat-value{font-size:32px;font-weight:900;letter-spacing:-1px}
+.stat-sub{font-size:12px;color:var(--muted);margin-top:4px}
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px}
+.chart-card.full{grid-column:1/-1}
+.chart-title{font-size:14px;font-weight:700;margin-bottom:4px}
+.chart-sub{font-size:12px;color:var(--muted);margin-bottom:20px}
+.chart-wrap{position:relative;height:220px}
+.platform-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.platform-row:last-child{border-bottom:none}
+.platform-name{font-size:13px;font-weight:700;width:100px}
+.platform-bar-wrap{flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:4px}
+.platform-bar{height:100%;border-radius:4px;background:var(--gold)}
+.platform-stats{font-size:12px;color:var(--muted);width:120px;text-align:right}
+.keyword-cloud{display:flex;flex-wrap:wrap;gap:8px;padding-top:8px}
+.keyword-tag{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:default}
+.keyword-pos{background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2)}
+.keyword-neg{background:rgba(239,68,68,0.1);color:var(--red);border:1px solid rgba(239,68,68,0.2)}
+.keyword-neu{background:rgba(255,255,255,0.05);color:var(--muted);border:1px solid var(--border)}
+.staff-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.staff-row:last-child{border-bottom:none}
+.staff-name{font-size:14px;font-weight:700;text-transform:capitalize;width:100px}
+.staff-bars{flex:1;display:flex;gap:4px;align-items:center}
+.staff-pos-bar{height:6px;border-radius:3px;background:var(--green)}
+.staff-neg-bar{height:6px;border-radius:3px;background:var(--red)}
+.staff-count{font-size:12px;color:var(--muted);width:80px;text-align:right}
+.tourist-section{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.tourist-card{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center}
+.tourist-pct{font-size:36px;font-weight:900;letter-spacing:-1px;margin-bottom:4px}
+.tourist-label{font-size:13px;color:var(--muted)}
+.revenue-impact{background:linear-gradient(135deg,rgba(34,197,94,0.08),rgba(34,197,94,0.02));border:1px solid rgba(34,197,94,0.2);border-radius:16px;padding:28px;text-align:center;margin-bottom:20px}
+.revenue-amount{font-size:48px;font-weight:900;color:var(--green);letter-spacing:-2px;margin-bottom:8px}
+.revenue-sub{font-size:14px;color:var(--muted);line-height:1.6}
+.loading{text-align:center;padding:60px;color:var(--muted);font-size:14px}
+@media(max-width:768px){.stats-grid{grid-template-columns:1fr 1fr}.charts-grid{grid-template-columns:1fr}.main{padding:16px}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-logo">Repu<span>LV</span> <span style="font-size:13px;font-weight:500;color:var(--muted);margin-left:8px;">Analytics</span></div>
+  <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+</div>
+
+<div class="main">
+  <div class="page-title">Analytics & Insights</div>
+  <div class="page-sub">Deep dive into your reputation data — staff performance, keyword analysis, tourist detection, and more</div>
+
+  <div id="loading" class="loading">Loading your analytics...</div>
+  <div id="content" style="display:none;">
+
+    <!-- TOP STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Avg Rating</div>
+        <div class="stat-value" style="color:var(--gold);" id="a-rating">—</div>
+        <div class="stat-sub">out of 5.0 stars</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Reviews</div>
+        <div class="stat-value" id="a-total">—</div>
+        <div class="stat-sub">across all platforms</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Avg Response Time</div>
+        <div class="stat-value" style="color:var(--green);" id="a-response">—</div>
+        <div class="stat-sub">hours to respond</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Revenue Impact</div>
+        <div class="stat-value" style="color:var(--green);" id="a-revenue">—</div>
+        <div class="stat-sub">potential monthly gain</div>
+      </div>
+    </div>
+
+    <!-- REVENUE IMPACT -->
+    <div class="revenue-impact">
+      <div style="font-size:13px;font-weight:700;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;">Revenue Opportunity</div>
+      <div class="revenue-amount" id="rev-amount">$0</div>
+      <div class="revenue-sub" id="rev-sub">Estimated monthly revenue gain if you improve your rating by 0.5 stars</div>
+    </div>
+
+    <!-- CHARTS ROW 1 -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-title">Rating Trend</div>
+        <div class="chart-sub">Average rating over the last 30 days</div>
+        <div class="chart-wrap"><canvas id="ratingChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Rating Distribution</div>
+        <div class="chart-sub">Breakdown of 1-5 star reviews</div>
+        <div class="chart-wrap"><canvas id="distChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- PLATFORM BREAKDOWN -->
+    <div class="chart-card" style="margin-bottom:20px;">
+      <div class="chart-title">Platform Breakdown</div>
+      <div class="chart-sub">Performance across Google, Yelp, and TripAdvisor</div>
+      <div id="platform-rows"></div>
+    </div>
+
+    <!-- CHARTS ROW 2 -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-title">Peak Review Hours</div>
+        <div class="chart-sub">When customers leave reviews — be ready to respond</div>
+        <div class="chart-wrap"><canvas id="hoursChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Peak Review Days</div>
+        <div class="chart-sub">Which days of the week get the most reviews</div>
+        <div class="chart-wrap"><canvas id="daysChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- TOURIST VS LOCAL -->
+    <div class="chart-card" style="margin-bottom:20px;">
+      <div class="chart-title">🏖️ Tourist vs Local Detector</div>
+      <div class="chart-sub">AI detects whether reviews come from tourists or local customers</div>
+      <div class="tourist-section">
+        <div class="tourist-card">
+          <div class="tourist-pct" style="color:var(--gold);" id="tourist-pct">—</div>
+          <div class="tourist-label">✈️ Tourists</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px;" id="tourist-count"></div>
+        </div>
+        <div class="tourist-card">
+          <div class="tourist-pct" style="color:var(--green);" id="local-pct">—</div>
+          <div class="tourist-label">📍 Local Customers</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px;" id="local-count"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAFF PERFORMANCE -->
+    <div class="chart-card" style="margin-bottom:20px;">
+      <div class="chart-title">👥 Staff Performance</div>
+      <div class="chart-sub">Names mentioned in reviews — green = positive mentions, red = negative</div>
+      <div id="staff-rows"><p style="color:var(--muted);font-size:13px;padding:16px 0;">No staff names detected in reviews yet.</p></div>
+    </div>
+
+    <!-- KEYWORD CLOUD -->
+    <div class="chart-card" style="margin-bottom:20px;">
+      <div class="chart-title">🔤 Review DNA — Top Keywords</div>
+      <div class="chart-sub">Most mentioned words in your reviews — green = mostly positive context, red = mostly negative</div>
+      <div class="keyword-cloud" id="keyword-cloud"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const API = 'https://repulv-backend-production.up.railway.app';
+const token = localStorage.getItem('repulv_token') || sessionStorage.getItem('repulv_token');
+
+if (!token) { window.location.href = 'dashboard.html'; }
+
+const chartDefaults = {
+  plugins: { legend: { display: false } },
+  scales: {
+    x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#555', font: { size: 11 } } },
+    y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#555', font: { size: 11 } } }
+  }
+};
+
+async function loadAnalytics() {
+  try {
+    const res = await fetch(`${API}/analytics/overview`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const d = await res.json();
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('content').style.display = 'block';
+
+    // Top stats
+    document.getElementById('a-rating').textContent = d.avgRating?.toFixed(1) || '—';
+    document.getElementById('a-total').textContent = d.totalReviews || 0;
+    document.getElementById('a-response').textContent = d.avgResponseHours || 0;
+    document.getElementById('a-revenue').textContent = '$' + (d.revenueImpact || 0).toLocaleString();
+
+    // Revenue impact
+    document.getElementById('rev-amount').textContent = '$' + (d.revenueImpact || 0).toLocaleString() + '/mo';
+
+    // Rating trend chart
+    if (d.ratingTrend?.length) {
+      new Chart(document.getElementById('ratingChart'), {
+        type: 'line',
+        data: {
+          labels: d.ratingTrend.map(r => r.date?.slice(5) || ''),
+          datasets: [{
+            data: d.ratingTrend.map(r => r.avg_rating),
+            borderColor: '#c8a84b', backgroundColor: 'rgba(200,168,75,0.1)',
+            tension: 0.4, fill: true, pointRadius: 3, pointBackgroundColor: '#c8a84b'
+          }]
+        },
+        options: { ...chartDefaults, scales: { ...chartDefaults.scales, y: { ...chartDefaults.scales.y, min: 1, max: 5 } } }
+      });
+    }
+
+    // Rating distribution
+    if (d.ratingDist?.length) {
+      const dist = [5,4,3,2,1].map(r => d.ratingDist.find(x => x.rating === r)?.count || 0);
+      new Chart(document.getElementById('distChart'), {
+        type: 'bar',
+        data: {
+          labels: ['5★','4★','3★','2★','1★'],
+          datasets: [{ data: dist, backgroundColor: ['#22c55e','#84cc16','#eab308','#f97316','#ef4444'], borderRadius: 6 }]
+        },
+        options: chartDefaults
+      });
+    }
+
+    // Platform breakdown
+    if (d.platformBreakdown?.length) {
+      const maxCount = Math.max(...d.platformBreakdown.map(p => p.count));
+      document.getElementById('platform-rows').innerHTML = d.platformBreakdown.map(p => `
+        <div class="platform-row">
+          <div class="platform-name">${p.platform}</div>
+          <div class="platform-bar-wrap"><div class="platform-bar" style="width:${(p.count/maxCount*100)}%"></div></div>
+          <div class="platform-stats">${p.count} reviews · ${p.avg_rating}★ · ${p.responded} responded</div>
+        </div>
+      `).join('');
+    }
+
+    // Peak hours
+    if (d.peakHours?.length) {
+      const hours = Array.from({length:24}, (_,i) => ({ hour: i, count: 0 }));
+      d.peakHours.forEach(h => { hours[h.hour].count = h.count; });
+      new Chart(document.getElementById('hoursChart'), {
+        type: 'bar',
+        data: {
+          labels: hours.map(h => h.hour + ':00'),
+          datasets: [{ data: hours.map(h => h.count), backgroundColor: 'rgba(200,168,75,0.6)', borderRadius: 3 }]
+        },
+        options: chartDefaults
+      });
+    }
+
+    // Peak days
+    if (d.peakDays?.length) {
+      new Chart(document.getElementById('daysChart'), {
+        type: 'bar',
+        data: {
+          labels: d.peakDays.map(d => d.day),
+          datasets: [{ data: d.peakDays.map(d => d.count), backgroundColor: 'rgba(200,168,75,0.6)', borderRadius: 6 }]
+        },
+        options: chartDefaults
+      });
+    }
+
+    // Tourist vs Local
+    const tv = d.touristVsLocal;
+    if (tv?.total > 0) {
+      document.getElementById('tourist-pct').textContent = Math.round(tv.tourists/tv.total*100) + '%';
+      document.getElementById('local-pct').textContent = Math.round(tv.locals/tv.total*100) + '%';
+      document.getElementById('tourist-count').textContent = tv.tourists + ' reviews';
+      document.getElementById('local-count').textContent = tv.locals + ' reviews';
+    }
+
+    // Staff mentions
+    if (d.staffMentions?.length) {
+      const maxTotal = Math.max(...d.staffMentions.map(s => s.total));
+      document.getElementById('staff-rows').innerHTML = d.staffMentions.map(s => `
+        <div class="staff-row">
+          <div class="staff-name">${s.name}</div>
+          <div class="staff-bars">
+            <div class="staff-pos-bar" style="width:${(s.positive/maxTotal*200)}px"></div>
+            <div style="width:8px"></div>
+            <div class="staff-neg-bar" style="width:${(s.negative/maxTotal*100)}px"></div>
+          </div>
+          <div class="staff-count">${s.positive} pos · ${s.negative} neg</div>
+        </div>
+      `).join('');
+    }
+
+    // Keywords
+    if (d.topKeywords?.length) {
+      document.getElementById('keyword-cloud').innerHTML = d.topKeywords.map(k => {
+        const cls = k.positive > k.negative * 1.5 ? 'keyword-pos' : k.negative > k.positive ? 'keyword-neg' : 'keyword-neu';
+        const size = Math.max(11, Math.min(18, 11 + k.count));
+        return `<span class="keyword-tag ${cls}" style="font-size:${size}px">${k.word} (${k.count})</span>`;
+      }).join('');
+    }
+
+  } catch(e) {
+    console.error(e);
+    document.getElementById('loading').textContent = 'Error loading analytics. Please try again.';
+  }
+}
+
+loadAnalytics();
+</script>
+</body>
+</html>
