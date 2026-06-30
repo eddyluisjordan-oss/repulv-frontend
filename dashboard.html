@@ -295,32 +295,120 @@
     <div class="page active" id="page-overview">
       <h1 class="page-title">Dashboard</h1>
       <p class="page-sub">Your reputation at a glance</p>
-      <div id="setup-banner" class="setup-card">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px;">
-          <span style="font-size:20px;">&#128640;</span>
-          <strong style="font-size:16px;font-weight:800;">Let's get you set up</strong>
-          <span class="badge badge-gold">3 steps left</span>
+      <!-- ONBOARDING WIZARD -->
+      <div id="onboarding-wizard" class="setup-card" style="display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="font-size:24px;">&#128640;</span>
+            <div>
+              <div style="font-size:16px;font-weight:800;" id="wizard-title">Let's get you set up</div>
+              <div style="font-size:13px;color:var(--muted);" id="wizard-sub">Complete 4 quick steps to start monitoring your reviews</div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:var(--muted);" id="wizard-step-count">Step 1 of 4</div>
         </div>
-        <p style="font-size:13px;color:#666;margin-bottom:16px;">Complete setup to start monitoring your reviews automatically.</p>
-        <div class="setup-steps">
-          <div class="setup-step">
-            <div class="setup-step-num setup-step-done">&#10003;</div>
-            <div class="setup-step-text"><strong>Account created</strong> &mdash; You're in.</div>
+
+        <!-- Progress bar -->
+        <div style="height:4px;background:rgba(255,255,255,0.06);border-radius:2px;margin-bottom:24px;">
+          <div id="wizard-progress" style="height:100%;border-radius:2px;background:var(--gold);transition:width 0.4s;width:25%;"></div>
+        </div>
+
+        <!-- Step 1: Business Info -->
+        <div id="wizard-step-1">
+          <div style="font-size:14px;font-weight:700;margin-bottom:16px;color:var(--gold);">&#9312; Tell us about your business</div>
+          <div class="form-row" style="margin-bottom:12px;">
+            <div class="form-group">
+              <label class="form-label">Business Name *</label>
+              <input type="text" class="form-input" id="w-biz-name" placeholder="Smith's Restaurant">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Business Type *</label>
+              <select class="form-input" id="w-biz-type">
+                <option value="">Select type...</option>
+                <option>Restaurant / Bar</option>
+                <option>Nail Salon / Spa</option>
+                <option>Barbershop</option>
+                <option>Hotel / Hospitality</option>
+                <option>Auto Service</option>
+                <option>Medical / Dental</option>
+                <option>Retail Store</option>
+                <option>Entertainment</option>
+                <option>Other</option>
+              </select>
+            </div>
           </div>
-          <div class="setup-step">
-            <div class="setup-step-num">2</div>
-            <div class="setup-step-text"><strong>Add your business</strong> &mdash; Name, address, and Google listing URL.</div>
+          <div class="form-group" style="margin-bottom:20px;">
+            <label class="form-label">Google My Business URL</label>
+            <input type="text" class="form-input" id="w-google-url" placeholder="https://g.page/r/YOUR_PLACE_ID/review">
+            <div style="font-size:11px;color:var(--muted);margin-top:6px;">Find this by searching your business on Google Maps → Share → Copy link</div>
           </div>
-          <div class="setup-step">
-            <div class="setup-step-num">3</div>
-            <div class="setup-step-text"><strong>Connect Google My Business</strong> &mdash; So we can pull your reviews.</div>
+          <button class="btn-primary" style="width:auto;padding:11px 28px;" onclick="wizardNext(1)">Continue &rarr;</button>
+        </div>
+
+        <!-- Step 2: Alert Setup -->
+        <div id="wizard-step-2" style="display:none;">
+          <div style="font-size:14px;font-weight:700;margin-bottom:16px;color:var(--gold);">&#9313; Set up your alerts</div>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:20px;">Get notified instantly when a bad review comes in so you can respond fast.</p>
+          <div class="form-row" style="margin-bottom:20px;">
+            <div class="form-group">
+              <label class="form-label">Alert Email *</label>
+              <input type="email" class="form-input" id="w-alert-email" placeholder="owner@yourbusiness.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Alert Phone (SMS)</label>
+              <input type="tel" class="form-input" id="w-alert-phone" placeholder="+1 702-555-0100">
+            </div>
           </div>
-          <div class="setup-step">
-            <div class="setup-step-num">4</div>
-            <div class="setup-step-text"><strong>Set up alerts</strong> &mdash; Get notified the moment a bad review comes in.</div>
+          <div style="background:rgba(200,168,75,0.08);border:1px solid rgba(200,168,75,0.15);border-radius:10px;padding:14px;margin-bottom:20px;">
+            <p style="font-size:13px;color:#c8a84b;font-weight:700;margin-bottom:4px;">&#128276; You will be alerted when:</p>
+            <p style="font-size:12px;color:#666;line-height:1.6;">A review of 3 stars or below comes in &bull; A review goes unanswered for 24 hours &bull; Your rating drops significantly</p>
+          </div>
+          <div style="display:flex;gap:12px;">
+            <button class="btn-sm btn-ghost" onclick="wizardBack(2)">&#8592; Back</button>
+            <button class="btn-primary" style="width:auto;padding:11px 28px;" onclick="wizardNext(2)">Continue &rarr;</button>
           </div>
         </div>
-        <button class="btn-primary" style="margin-top:20px;width:auto;padding:10px 24px;" onclick="showPage('settings')">Complete Setup &rarr;</button>
+
+        <!-- Step 3: Autopilot -->
+        <div id="wizard-step-3" style="display:none;">
+          <div style="font-size:14px;font-weight:700;margin-bottom:16px;color:var(--gold);">&#9314; Enable Autopilot Mode</div>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:20px;">RepuLV can automatically respond to reviews 24/7 so you never miss one.</p>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
+            <div id="autopilot-option-yes" onclick="selectAutopilot('yes')" style="padding:16px;border-radius:12px;border:2px solid var(--border);cursor:pointer;transition:all 0.2s;">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--muted);flex-shrink:0;" id="autopilot-radio-yes"></div>
+                <div>
+                  <div style="font-weight:700;font-size:14px;">&#129302; Yes, enable Autopilot</div>
+                  <div style="font-size:12px;color:var(--muted);margin-top:2px;">AI responds to every review automatically. You get an email showing what was posted.</div>
+                </div>
+              </div>
+            </div>
+            <div id="autopilot-option-no" onclick="selectAutopilot('no')" style="padding:16px;border-radius:12px;border:2px solid var(--border);cursor:pointer;transition:all 0.2s;">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--muted);flex-shrink:0;" id="autopilot-radio-no"></div>
+                <div>
+                  <div style="font-weight:700;font-size:14px;">&#9997;&#65039; I'll approve responses manually</div>
+                  <div style="font-size:12px;color:var(--muted);margin-top:2px;">AI generates responses, you review and post them yourself.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;">
+            <button class="btn-sm btn-ghost" onclick="wizardBack(3)">&#8592; Back</button>
+            <button class="btn-primary" style="width:auto;padding:11px 28px;" onclick="wizardNext(3)">Continue &rarr;</button>
+          </div>
+        </div>
+
+        <!-- Step 4: Done -->
+        <div id="wizard-step-4" style="display:none;text-align:center;padding:20px 0;">
+          <div style="font-size:56px;margin-bottom:16px;">&#127881;</div>
+          <div style="font-size:20px;font-weight:900;margin-bottom:8px;">You're all set!</div>
+          <div style="font-size:14px;color:var(--muted);margin-bottom:28px;line-height:1.6;">RepuLV is now protecting your reputation 24/7.<br>Check your email for your welcome message.</div>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+            <button class="btn-primary" style="width:auto;padding:11px 24px;" onclick="completeWizard()">Go to Dashboard &#127919;</button>
+            <button class="btn-sm btn-gold" onclick="window.location.href='qr-generator.html'">&#128247; Get Your QR Code</button>
+          </div>
+        </div>
       </div>
 
       <div class="grid-4">
@@ -636,6 +724,8 @@ function showDashboard() {
     document.getElementById('user-avatar-initials').textContent = initials;
     document.getElementById('sidebar-user-name').textContent = currentUser.name || 'User';
     document.getElementById('sidebar-user-email').textContent = currentUser.email || '';
+    // Show onboarding wizard for new users
+    setTimeout(checkShowWizard, 500);
     
     // Show trial banner
     if (currentUser.trial_active && currentUser.trial_days_left > 0) {
@@ -855,6 +945,87 @@ async function saveBusiness() {
     document.getElementById('setup-banner').style.display = 'none';
   } catch(e) { showToast('\u2713 Business saved locally!'); }
   btn.disabled = false; btn.textContent = 'Save Business';
+}
+
+// ONBOARDING WIZARD
+let wizardAutopilot = 'yes';
+
+function checkShowWizard() {
+  const wizardDone = localStorage.getItem('repulv_wizard_done');
+  if (!wizardDone) {
+    document.getElementById('onboarding-wizard').style.display = 'block';
+  }
+}
+
+function wizardNext(step) {
+  if (step === 1) {
+    const name = document.getElementById('w-biz-name').value.trim();
+    const type = document.getElementById('w-biz-type').value;
+    if (!name || !type) { showToast('Please fill in business name and type'); return; }
+    // Save to settings fields too
+    document.getElementById('biz-name').value = name;
+    document.getElementById('biz-type').value = type;
+    const googleUrl = document.getElementById('w-google-url').value.trim();
+    if (googleUrl) document.getElementById('biz-google').value = googleUrl;
+  }
+  if (step === 2) {
+    const email = document.getElementById('w-alert-email').value.trim();
+    if (!email) { showToast('Please enter your alert email'); return; }
+    document.getElementById('biz-email').value = email;
+    const phone = document.getElementById('w-alert-phone').value.trim();
+    if (phone) document.getElementById('biz-phone').value = phone;
+    saveBusiness();
+  }
+  document.getElementById('wizard-step-' + step).style.display = 'none';
+  document.getElementById('wizard-step-' + (step + 1)).style.display = 'block';
+  updateWizardProgress(step + 1);
+}
+
+function wizardBack(step) {
+  document.getElementById('wizard-step-' + step).style.display = 'none';
+  document.getElementById('wizard-step-' + (step - 1)).style.display = 'block';
+  updateWizardProgress(step - 1);
+}
+
+function updateWizardProgress(step) {
+  const pct = (step / 4) * 100;
+  document.getElementById('wizard-progress').style.width = pct + '%';
+  document.getElementById('wizard-step-count').textContent = 'Step ' + step + ' of 4';
+  const titles = ['', "Let's get you set up", 'Set up your alerts', 'Enable Autopilot', 'Setup complete!'];
+  document.getElementById('wizard-title').textContent = titles[step];
+}
+
+function selectAutopilot(choice) {
+  wizardAutopilot = choice;
+  const yes = document.getElementById('autopilot-option-yes');
+  const no = document.getElementById('autopilot-option-no');
+  const radioYes = document.getElementById('autopilot-radio-yes');
+  const radioNo = document.getElementById('autopilot-radio-no');
+  if (choice === 'yes') {
+    yes.style.borderColor = 'var(--gold)';
+    yes.style.background = 'rgba(200,168,75,0.08)';
+    no.style.borderColor = 'var(--border)';
+    no.style.background = 'transparent';
+    radioYes.style.background = 'var(--gold)';
+    radioYes.style.borderColor = 'var(--gold)';
+    radioNo.style.background = 'transparent';
+    radioNo.style.borderColor = 'var(--muted)';
+  } else {
+    no.style.borderColor = 'var(--gold)';
+    no.style.background = 'rgba(200,168,75,0.08)';
+    yes.style.borderColor = 'var(--border)';
+    yes.style.background = 'transparent';
+    radioNo.style.background = 'var(--gold)';
+    radioNo.style.borderColor = 'var(--gold)';
+    radioYes.style.background = 'transparent';
+    radioYes.style.borderColor = 'var(--muted)';
+  }
+}
+
+function completeWizard() {
+  localStorage.setItem('repulv_wizard_done', '1');
+  document.getElementById('onboarding-wizard').style.display = 'none';
+  showToast('Setup complete! RepuLV is protecting you 24/7 ✅');
 }
 
 // AUTOPILOT TOGGLE
