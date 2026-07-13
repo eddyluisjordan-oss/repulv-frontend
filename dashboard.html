@@ -217,7 +217,7 @@
       </div>
       <div class="form-group">
         <label class="form-label">Password</label>
-        <div style="position:relative;"><input type="password" class="form-input" id="login-password" placeholder="••••••••" style="padding-right:44px;"><button type="button" onclick="togglePw('login-password',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#555;font-size:16px;padding:4px;">👁</button></div>
+        <div style="position:relative;"><input type="password" class="form-input" id="login-password" placeholder="••••••••" style="padding-right:44px;"><button type="button" onclick="var i=document.getElementById('login-password');if(i.type==='password'){i.type='text';this.textContent='🙈';}else{i.type='password';this.textContent='👁';}" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#555;font-size:16px;padding:4px;">👁</button></div>
       </div>
       <button class="btn-primary" onclick="doLogin()" id="login-btn">Sign In</button>
       <p style="text-align:center;margin-top:12px;"><a onclick="showForgotPassword()" style="font-size:13px;color:var(--muted);cursor:pointer;text-decoration:none;">Forgot password?</a></p><p class="auth-switch">Don't have an account? <a onclick="showRegister()">Start free trial &rarr;</a></p>
@@ -236,7 +236,7 @@
       </div>
       <div class="form-group">
         <label class="form-label">Password</label>
-        <div style="position:relative;"><input type="password" class="form-input" id="reg-password" placeholder="Create a password" style="padding-right:44px;"><button type="button" onclick="togglePw('reg-password',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#555;font-size:16px;padding:4px;">👁</button></div>
+        <div style="position:relative;"><input type="password" class="form-input" id="reg-password" placeholder="Create a password" style="padding-right:44px;"><button type="button" onclick="var i=document.getElementById('reg-password');if(i.type==='password'){i.type='text';this.textContent='🙈';}else{i.type='password';this.textContent='👁';}" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#555;font-size:16px;padding:4px;">👁</button></div>
       </div>
       <button class="btn-primary" onclick="doRegister()" id="register-btn">Create Account &rarr;</button>
       <p class="auth-switch">Already have an account? <a onclick="showLogin()">Sign in</a></p>
