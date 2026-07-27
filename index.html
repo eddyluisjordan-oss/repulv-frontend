@@ -473,6 +473,337 @@
     .form-row { grid-template-columns: 1fr; }
     footer { flex-direction: column; gap: 16px; text-align: center; }
   }
+
+/* ── 2026 LUXURY ENHANCEMENTS ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(201,168,76,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(201,168,76,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 50% 50%, rgba(201,168,76,0.03) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Premium hero upgrade */
+.hero-section-upgrade {
+  position: relative;
+  z-index: 1;
+  padding: 140px 24px 80px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.luxury-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(201,168,76,0.06);
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 30px;
+  padding: 8px 20px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  backdrop-filter: blur(10px);
+}
+
+.luxury-eyebrow::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 8px var(--gold);
+  animation: glowpulse 2s infinite;
+}
+
+@keyframes glowpulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--gold); }
+  50% { opacity: 0.4; box-shadow: 0 0 2px var(--gold); }
+}
+
+.luxury-h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(42px, 7vw, 90px);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -2px;
+  color: #f0ede6;
+  margin-bottom: 28px;
+}
+
+.luxury-h1 .luxury-gold {
+  background: linear-gradient(135deg, #c9a84c, #f0d07a, #c9a84c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.luxury-sub {
+  font-size: 18px;
+  color: rgba(240,237,230,0.55);
+  max-width: 560px;
+  margin: 0 auto 48px;
+  line-height: 1.75;
+  font-weight: 400;
+}
+
+.luxury-btns {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 80px;
+}
+
+.luxury-btn-primary {
+  background: linear-gradient(135deg, #c9a84c, #f0d07a);
+  color: #05050a;
+  font-weight: 800;
+  font-size: 15px;
+  padding: 18px 40px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 30px rgba(201,168,76,0.3), 0 4px 20px rgba(0,0,0,0.4);
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.luxury-btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 50px rgba(201,168,76,0.5), 0 8px 30px rgba(0,0,0,0.4);
+}
+
+.luxury-btn-ghost {
+  background: rgba(255,255,255,0.04);
+  color: rgba(240,237,230,0.8);
+  font-weight: 600;
+  font-size: 15px;
+  padding: 18px 40px;
+  border-radius: 50px;
+  border: 1px solid rgba(255,255,255,0.1);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+  backdrop-filter: blur(10px);
+}
+
+.luxury-btn-ghost:hover {
+  border-color: rgba(201,168,76,0.4);
+  color: #f0ede6;
+  transform: translateY(-2px);
+}
+
+/* Glass stats bar */
+.luxury-stats {
+  display: flex;
+  gap: 0;
+  justify-content: center;
+  max-width: 800px;
+  margin: 0 auto 80px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(201,168,76,0.12);
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+}
+
+.luxury-stat {
+  flex: 1;
+  padding: 24px 20px;
+  text-align: center;
+  border-right: 1px solid rgba(201,168,76,0.08);
+}
+
+.luxury-stat:last-child { border-right: none; }
+
+.luxury-stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.luxury-stat-label {
+  font-size: 11px;
+  color: rgba(240,237,230,0.4);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+/* 3D Dashboard mockup */
+.luxury-mockup {
+  max-width: 960px;
+  margin: 0 auto;
+  perspective: 1400px;
+  position: relative;
+  z-index: 1;
+}
+
+.luxury-mockup-glow {
+  position: absolute;
+  bottom: -60px;
+  left: 10%;
+  right: 10%;
+  height: 200px;
+  background: radial-gradient(ellipse, rgba(201,168,76,0.2) 0%, transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+.luxury-mockup-inner {
+  transform: rotateX(10deg);
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow:
+    0 60px 120px rgba(0,0,0,0.7),
+    0 0 0 1px rgba(201,168,76,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.luxury-mockup:hover .luxury-mockup-inner {
+  transform: rotateX(2deg);
+}
+
+.mockup-chrome {
+  background: #0d0d18;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.chrome-dot { width: 10px; height: 10px; border-radius: 50%; }
+.chrome-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 3px;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.mockup-body {
+  background: #080814;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  min-height: 360px;
+}
+
+.mockup-sidebar {
+  background: rgba(255,255,255,0.02);
+  border-right: 1px solid rgba(255,255,255,0.04);
+  padding: 20px 12px;
+}
+
+.mockup-logo {
+  font-size: 16px;
+  font-weight: 900;
+  color: #c9a84c;
+  margin-bottom: 24px;
+  padding: 0 8px;
+}
+
+.mockup-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 2px;
+}
+
+.mockup-nav-item.active {
+  background: rgba(201,168,76,0.1);
+  color: #c9a84c;
+}
+
+.mockup-content { padding: 20px; }
+
+.mockup-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.mockup-stat-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.msc-label { font-size: 8px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.msc-val { font-size: 20px; font-weight: 900; letter-spacing: -0.5px; }
+
+.mockup-cards-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.mockup-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.mc-title { font-size: 8px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+
+.mc-review { padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.mc-review:last-child { border-bottom: none; }
+.mc-stars { color: #c9a84c; font-size: 8px; margin-bottom: 2px; }
+.mc-author { font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.7); margin-bottom: 2px; }
+.mc-text { font-size: 8px; color: rgba(255,255,255,0.3); line-height: 1.4; }
+.mc-ai { margin-top: 6px; padding: 6px 8px; background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.12); border-radius: 6px; font-size: 8px; color: rgba(201,168,76,0.8); line-height: 1.4; }
+
+.mc-bar-row { margin-bottom: 6px; }
+.mc-bar-label { font-size: 8px; color: rgba(255,255,255,0.3); margin-bottom: 3px; }
+.mc-bar-track { height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; }
+.mc-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, #c9a84c, #f0d07a); }
+
+.mc-autopilot {
+  margin-top: 10px;
+  padding: 8px;
+  background: rgba(34,197,94,0.06);
+  border: 1px solid rgba(34,197,94,0.15);
+  border-radius: 7px;
+  font-size: 8px;
+  color: rgba(34,197,94,0.8);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ap-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 6px #22c55e; animation: glowpulse 2s infinite; flex-shrink: 0; }
+
+/* Scroll reveal */
+.sr { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.23,1,0.32,1), transform 0.8s cubic-bezier(0.23,1,0.32,1); }
+.sr.visible { opacity: 1; transform: translateY(0); }
+.sr-delay-1 { transition-delay: 0.1s; }
+.sr-delay-2 { transition-delay: 0.2s; }
+.sr-delay-3 { transition-delay: 0.3s; }
 </style>
 </head>
 <body>
@@ -488,6 +819,76 @@
 </nav>
 
 <!-- HERO -->
+<!-- LUXURY HERO 2026 -->
+<div class="hero-section-upgrade">
+  <div class="luxury-eyebrow">&#127942; Vegas Built &middot; Vegas Owned &middot; Vegas Proud</div>
+  <h1 class="luxury-h1">
+    While You Sleep,<br>
+    <span class="luxury-gold">RepuLV Protects</span><br>
+    Your Reputation
+  </h1>
+  <p class="luxury-sub">AI-powered review monitoring and responses for Las Vegas businesses. Never miss a bad review. Never lose a customer you could have saved.</p>
+  <div class="luxury-btns">
+    <a href="#contact" class="luxury-btn-primary">Start My Free 14-Day Trial &rarr;</a>
+    <a href="#how" class="luxury-btn-ghost">See How It Works</a>
+  </div>
+  <div class="luxury-stats sr">
+    <div class="luxury-stat"><div class="luxury-stat-num">24/7</div><div class="luxury-stat-label">Review Monitoring</div></div>
+    <div class="luxury-stat"><div class="luxury-stat-num">&lt;2min</div><div class="luxury-stat-label">AI Response Time</div></div>
+    <div class="luxury-stat"><div class="luxury-stat-num">97%</div><div class="luxury-stat-label">Response Rate</div></div>
+    <div class="luxury-stat"><div class="luxury-stat-num">$97</div><div class="luxury-stat-label">Starting Per Month</div></div>
+  </div>
+  <div class="luxury-mockup sr sr-delay-1">
+    <div class="luxury-mockup-glow"></div>
+    <div class="luxury-mockup-inner">
+      <div class="mockup-chrome">
+        <div class="chrome-dot" style="background:#ff5f57"></div>
+        <div class="chrome-dot" style="background:#febc2e"></div>
+        <div class="chrome-dot" style="background:#28c840"></div>
+        <div class="chrome-bar"></div>
+        <div style="margin-left:auto;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#f87171;font-size:8px;font-weight:700;padding:3px 10px;border-radius:8px;">&#128680; New 2&#9733; Review</div>
+      </div>
+      <div class="mockup-body">
+        <div class="mockup-sidebar">
+          <div class="mockup-logo">RepuLV</div>
+          <div class="mockup-nav-item active">&#128202; Overview</div>
+          <div class="mockup-nav-item">&#11088; Reviews</div>
+          <div class="mockup-nav-item">&#9997;&#65039; AI Responses</div>
+          <div class="mockup-nav-item">&#128276; Alerts</div>
+          <div class="mockup-nav-item">&#128373;&#65039; Spy Mode</div>
+          <div class="mockup-nav-item">&#128202; Analytics</div>
+          <div class="mockup-nav-item">&#128179; Billing</div>
+        </div>
+        <div class="mockup-content">
+          <div class="mockup-stats-row">
+            <div class="mockup-stat-card"><div class="msc-label">Avg Rating</div><div class="msc-val" style="color:#c9a84c">4.7&#11088;</div></div>
+            <div class="mockup-stat-card"><div class="msc-label">Reviews</div><div class="msc-val">142</div></div>
+            <div class="mockup-stat-card"><div class="msc-label">Response Rate</div><div class="msc-val" style="color:#22c55e">97%</div></div>
+            <div class="mockup-stat-card"><div class="msc-label">Rep Score</div><div class="msc-val" style="color:#c9a84c">847</div></div>
+          </div>
+          <div class="mockup-cards-row">
+            <div class="mockup-card">
+              <div class="mc-title">Recent Reviews</div>
+              <div class="mc-review"><div class="mc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="mc-author">Jessica M. &middot; Google</div><div class="mc-text">Amazing service, best in Las Vegas!</div></div>
+              <div class="mc-review"><div class="mc-stars">&#9733;&#9733;&#9734;&#9734;&#9734;</div><div class="mc-author">Mike T. &middot; Yelp</div><div class="mc-text">Wait time was too long...</div><div class="mc-ai">&#129302; AI: "Thank you Mike, we sincerely apologize for the wait time..."</div></div>
+              <div class="mc-review"><div class="mc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="mc-author">Sarah K. &middot; TripAdvisor</div><div class="mc-text">Best experience in Vegas!</div></div>
+            </div>
+            <div class="mockup-card">
+              <div class="mc-title">Rating Breakdown</div>
+              <div class="mc-bar-row"><div class="mc-bar-label">5 stars</div><div class="mc-bar-track"><div class="mc-bar-fill" style="width:75%"></div></div></div>
+              <div class="mc-bar-row"><div class="mc-bar-label">4 stars</div><div class="mc-bar-track"><div class="mc-bar-fill" style="width:15%"></div></div></div>
+              <div class="mc-bar-row"><div class="mc-bar-label">3 stars</div><div class="mc-bar-track"><div class="mc-bar-fill" style="width:5%;background:rgba(234,179,8,0.6)"></div></div></div>
+              <div class="mc-bar-row"><div class="mc-bar-label">2 stars</div><div class="mc-bar-track"><div class="mc-bar-fill" style="width:3%;background:rgba(239,68,68,0.5)"></div></div></div>
+              <div class="mc-bar-row"><div class="mc-bar-label">1 star</div><div class="mc-bar-track"><div class="mc-bar-fill" style="width:2%;background:rgba(239,68,68,0.7)"></div></div></div>
+              <div class="mc-autopilot"><div class="ap-dot"></div>Autopilot Mode: ON &mdash; responding 24/7</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
@@ -834,6 +1235,12 @@
       if (target) target.scrollIntoView({ behavior: 'smooth' });
     });
   });
+</script>
+<script>
+const srObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.sr').forEach(el => srObs.observe(el));
 </script>
 </body>
 </html>
