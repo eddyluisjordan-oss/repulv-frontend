@@ -3,276 +3,837 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RepuLV — AI Reputation Management for Las Vegas Businesses</title>
-<meta name="description" content="RepuLV monitors, responds to, and protects your online reviews 24/7. Built in Las Vegas for Las Vegas businesses.">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>RepuLV — AI Review Management for Las Vegas Businesses</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--gold:#c9a84c;--gold-light:#e8c96a;--black:#050508;--surface:#0f0f18;--border:rgba(201,168,76,0.12);--text:#f0ede6;--muted:#9b98a8}
-html{scroll-behavior:smooth}
-body{font-family:"DM Sans",sans-serif;background:var(--black);color:var(--text);overflow-x:hidden}
-body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(ellipse at 20% 20%,rgba(201,168,76,0.06) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(201,168,76,0.04) 0%,transparent 50%);pointer-events:none}
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 48px;background:rgba(5,5,8,0.8);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,0.08)}
-.nav-logo{font-family:"Playfair Display",serif;font-size:22px;font-weight:900;color:var(--text);text-decoration:none}
-.nav-logo span{color:var(--gold)}
-.nav-links{display:flex;gap:32px;align-items:center}
-.nav-links a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;transition:color 0.2s}
-.nav-links a:hover{color:var(--text)}
-.nav-cta{background:linear-gradient(135deg,var(--gold),var(--gold-light))!important;color:#050508!important;padding:10px 22px;border-radius:8px;font-weight:700!important}
-.nav-login{color:var(--gold)!important;font-weight:600!important}
-.urgency{background:linear-gradient(135deg,rgba(201,168,76,0.1),rgba(201,168,76,0.04));border-bottom:1px solid rgba(201,168,76,0.15);text-align:center;padding:10px 20px;font-size:13px;color:var(--gold);font-weight:600;margin-top:65px;position:relative;z-index:1}
-.urgency span{color:var(--text)}
-.hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;color:#f0ede6}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:20px;padding:6px 16px;font-size:11px;font-weight:700;color:var(--gold);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:28px;}
-.hero-eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-.hero h1{font-family:"Playfair Display",serif;font-size:clamp(40px,7vw,88px);font-weight:900;line-height:1.05;letter-spacing:-2px;margin-bottom:28px;;color:#f0ede6}
-.gold-text{color:var(--gold)}
-.hero-sub{font-size:clamp(16px,2vw,20px);color:#9b98a8;max-width:560px;line-height:1.7;margin-bottom:44px;}
-.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:60px;}
-.btn-primary{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#050508;font-weight:800;font-size:15px;padding:16px 36px;border-radius:12px;border:none;cursor:pointer;text-decoration:none;display:inline-block;transition:transform 0.2s,box-shadow 0.2s;box-shadow:0 0 40px rgba(201,168,76,0.25);font-family:"DM Sans",sans-serif}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(201,168,76,0.4)}
-.btn-ghost{background:rgba(255,255,255,0.04);color:var(--text);font-weight:600;font-size:15px;padding:16px 36px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);cursor:pointer;text-decoration:none;display:inline-block;transition:border-color 0.2s,transform 0.2s;font-family:"DM Sans",sans-serif}
-.btn-ghost:hover{border-color:rgba(255,255,255,0.25);transform:translateY(-2px)}
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c96a;
+    --gold-dim: #8a6e2f;
+    --black: #080808;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: #2a2a2a;
+    --text: #e8e4dc;
+    --muted: #777;
+  }
 
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  html { scroll-behavior: smooth; }
 
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
 
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
 
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    padding: 20px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: linear-gradient(to bottom, rgba(8,8,8,0.95), transparent);
+    backdrop-filter: blur(10px);
+  }
 
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; font-weight: 900;
+    letter-spacing: -0.5px;
+    color: var(--gold);
+  }
 
+  .logo span { color: var(--text); }
 
-.mockup-wrap{width:100%;max-width:900px;margin:0 auto;;perspective:1200px}
-.mockup-inner{transform:rotateX(12deg) rotateY(-2deg);transform-style:preserve-3d;transition:transform 0.6s ease;position:relative}
-.mockup-inner:hover{transform:rotateX(4deg) rotateY(0deg)}
-.mockup-glow{position:absolute;inset:-20px;border-radius:24px;background:radial-gradient(ellipse at 50% 100%,rgba(201,168,76,0.2) 0%,transparent 70%);filter:blur(30px);z-index:-1}
-.mockup-screen{background:#0a0a14;border:1px solid rgba(201,168,76,0.2);border-radius:16px;padding:20px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,0.6),0 0 0 1px rgba(201,168,76,0.1)}
-.m-topbar{display:flex;align-items:center;gap:8px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.05)}
-.m-dot{width:10px;height:10px;border-radius:50%}
-.m-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
-.m-stat{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px}
-.m-stat-label{font-size:9px;color:#444;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
-.m-stat-val{font-size:22px;font-weight:900;letter-spacing:-1px}
-.m-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.m-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:10px;padding:14px}
-.m-card-title{font-size:9px;color:#444;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px}
-.m-review{padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
-.m-review:last-child{border-bottom:none}
-.m-review-name{font-size:10px;font-weight:700;margin-bottom:2px}
-.m-review-text{font-size:9px;color:#555;line-height:1.4}
-.m-stars{color:#c9a84c;font-size:9px;margin-bottom:2px}
-.m-bar{height:5px;border-radius:3px;margin-bottom:4px}
-.m-bar-label{font-size:8px;color:#444;margin-bottom:2px}
-.alert-badge{display:inline-block;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#f87171;font-size:8px;font-weight:700;padding:2px 8px;border-radius:10px}
-.ai-resp{background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:8px;padding:8px;font-size:9px;color:#888;line-height:1.5;margin-top:8px}
-.trust-bar{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;padding:20px 40px;background:rgba(255,255,255,0.02);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.trust-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:500}
-.ticker-wrap{overflow:hidden;padding:14px 0;background:rgba(201,168,76,0.04);border-bottom:1px solid rgba(201,168,76,0.08);position:relative;z-index:1}
-.ticker-track{display:flex;gap:28px;animation:ticker 30s linear infinite;width:max-content}
-@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.ticker-item{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:30px;padding:7px 16px;font-size:12px;white-space:nowrap;flex-shrink:0}
-.t-stars{color:var(--gold);font-size:10px}
-section{position:relative;z-index:1;padding:100px 24px}
-.container{max-width:1100px;margin:0 auto}
-.section-tag{font-size:11px;font-weight:700;color:var(--gold);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:16px;display:block}
-.section-title{font-family:"Playfair Display",serif;font-size:clamp(28px,4vw,52px);font-weight:700;line-height:1.1;margin-bottom:16px}
-.section-title span{color:var(--gold)}
-.section-sub{font-size:16px;color:var(--muted);max-width:560px;margin:0 auto 56px;line-height:1.7}
-.stats-section{background:linear-gradient(135deg,rgba(201,168,76,0.06),rgba(201,168,76,0.02));border:1px solid var(--border);border-radius:24px;padding:60px 40px;max-width:1100px;margin:0 auto}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;text-align:center}
-.stat-num{font-family:"Playfair Display",serif;font-size:52px;font-weight:700;color:var(--gold);line-height:1;margin-bottom:8px}
-.stat-label{font-size:14px;color:var(--muted)}
-.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.feature-card{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:16px;padding:28px;transition:border-color 0.2s,transform 0.2s}
-.feature-card:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-3px)}
-.feature-icon{font-size:32px;margin-bottom:16px}
-.feature-title{font-size:17px;font-weight:700;margin-bottom:8px}
-.feature-desc{font-size:14px;color:var(--muted);line-height:1.6}
-.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.pricing-card{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:20px;padding:32px 28px;display:flex;flex-direction:column;position:relative;transition:border-color 0.2s,transform 0.2s}
-.pricing-card:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-3px)}
-.pricing-card.featured{border:1.5px solid var(--gold);background:linear-gradient(160deg,#0f0c02 0%,rgba(255,255,255,0.02) 60%)}
-.pricing-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gold);color:#050508;font-size:10px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;padding:4px 14px;border-radius:20px}
-.pricing-name{font-family:"Playfair Display",serif;font-size:22px;font-weight:700;margin-bottom:6px}
-.pricing-tag{font-size:13px;color:var(--muted);margin-bottom:24px;min-height:40px}
-.pricing-price{display:flex;align-items:baseline;gap:4px;margin-bottom:28px}
-.p-dollar{font-size:22px;color:var(--gold);font-weight:600}
-.p-amount{font-size:52px;font-weight:300;line-height:1}
-.p-period{font-size:14px;color:var(--muted);align-self:flex-end;margin-bottom:6px}
-.p-divider{height:1px;background:rgba(255,255,255,0.06);margin-bottom:24px}
-.p-features{list-style:none;flex:1;display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
-.p-features li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--muted)}
-.p-check{width:18px;height:18px;border-radius:50%;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:10px;color:var(--gold)}
-.p-btn{display:block;width:100%;padding:14px;border-radius:10px;font-family:"DM Sans",sans-serif;font-size:14px;font-weight:700;cursor:pointer;text-align:center;border:none;transition:opacity 0.2s,transform 0.15s;text-decoration:none}
-.p-btn:hover{opacity:0.88;transform:translateY(-1px)}
-.p-btn.gold{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#050508}
-.p-btn.outline{background:transparent;border:1px solid rgba(201,168,76,0.4);color:var(--gold)}
-.comp-table{width:100%;border-collapse:collapse}
-.comp-table th{padding:16px 20px;text-align:center;font-size:14px;font-weight:700;border-bottom:1px solid var(--border)}
-.comp-table th:first-child{text-align:left}
-.comp-table th.rv{background:rgba(201,168,76,0.08);color:var(--gold);border-radius:12px 12px 0 0}
-.comp-table td{padding:14px 20px;text-align:center;font-size:14px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--muted)}
-.comp-table td:first-child{text-align:left;color:var(--text);font-weight:500}
-.comp-table td.rv{background:rgba(201,168,76,0.04);color:var(--text);font-weight:700}
-.c-check{color:#22c55e;font-size:18px}
-.c-cross{color:#333;font-size:18px}
-.c-price{font-family:"Playfair Display",serif;font-size:20px;font-weight:700}
-.calc-box{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.2);border-radius:20px;padding:40px;max-width:760px;margin:0 auto}
-.calc-inputs{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px}
-.calc-label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px}
-.calc-input{width:100%;padding:14px 16px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:20px;font-weight:700;font-family:"DM Sans",sans-serif;outline:none}
-.calc-input:focus{border-color:var(--gold)}
-.calc-results{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
-.calc-result{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center}
-.calc-result.hl{border-color:rgba(34,197,94,0.4);background:rgba(34,197,94,0.05)}
-.calc-num{font-family:"Playfair Display",serif;font-size:28px;font-weight:700;color:var(--gold);margin-bottom:4px}
-.calc-result.hl .calc-num{color:#22c55e}
-.calc-desc{font-size:12px;color:var(--muted)}
-.faq-list{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
-.faq-item{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color 0.2s}
-.faq-item:hover{border-color:rgba(201,168,76,0.3)}
-.faq-q{width:100%;padding:20px 24px;background:none;border:none;color:var(--text);font-size:15px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:"DM Sans",sans-serif;text-align:left}
-.faq-arrow{color:var(--gold);font-size:20px;transition:transform 0.2s}
-.faq-item.open .faq-arrow{transform:rotate(45deg)}
-.faq-a{padding:0 24px 20px;font-size:14px;color:var(--muted);line-height:1.7;display:none}
-.faq-item.open .faq-a{display:block}
-.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
-.story-visual{background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(201,168,76,0.02));border:1px solid var(--border);border-radius:24px;padding:40px;text-align:center}
-.story-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:24px}
-.story-stat{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
-.story-stat-num{font-family:"Playfair Display",serif;font-size:28px;font-weight:700;color:var(--gold)}
-.story-stat-label{font-size:11px;color:var(--muted);margin-top:4px}
-.story-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;margin:4px}
-.contact-section{background:rgba(255,255,255,0.01);border-top:1px solid var(--border)}
-.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
-.form-group{margin-bottom:16px}
-.form-group label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px}
-.form-group input,.form-group select{width:100%;padding:13px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;font-family:"DM Sans",sans-serif;outline:none;transition:border-color 0.2s}
-.form-group input:focus,.form-group select:focus{border-color:var(--gold)}
-.form-group select option{background:#0a0a14}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.contact-form-box{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:20px;padding:36px}
-.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease}
-.reveal.visible{opacity:1;transform:translateY(0)}
-footer{position:relative;z-index:1;background:var(--black);border-top:1px solid var(--border);padding:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
-.footer-logo{font-family:"Playfair Display",serif;font-size:20px;font-weight:900;color:var(--gold)}
-.footer-links{display:flex;gap:24px}
-.footer-links a{font-size:13px;color:#333;text-decoration:none;transition:color 0.2s}
-.footer-links a:hover{color:var(--muted)}
-@media(max-width:768px){nav{padding:14px 20px}.nav-links{display:none}.hero{padding:100px 20px 60px}section{padding:60px 20px}.stats-grid,.features-grid,.pricing-grid{grid-template-columns:1fr}.contact-grid,.story-grid,.calc-inputs,.calc-results,.form-row{grid-template-columns:1fr}.float-card{display:none}footer{flex-direction:column;text-align:center;padding:32px 20px}}
+  nav ul { list-style: none; display: flex; gap: 36px; }
+  nav ul a {
+    color: var(--muted); text-decoration: none;
+    font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  nav ul a:hover { color: var(--gold); }
+
+  .nav-cta {
+    background: var(--gold); color: var(--black) !important;
+    padding: 10px 22px; border-radius: 2px;
+    font-weight: 500 !important; letter-spacing: 1px !important;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--gold-light) !important; color: var(--black) !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 120px 48px 80px;
+    position: relative; overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 70% 50%, rgba(201,168,76,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 60%);
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
+  }
+
+  .hero-content { position: relative; z-index: 1; max-width: 760px; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--gold-dim); border-radius: 2px;
+    padding: 6px 14px; margin-bottom: 32px;
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold);
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .badge-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(48px, 6vw, 86px);
+    font-weight: 900; line-height: 1.0;
+    letter-spacing: -2px; margin-bottom: 28px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .hero h1 em {
+    font-style: italic; color: var(--gold);
+    display: block;
+  }
+
+  .hero p {
+    font-size: 18px; line-height: 1.7;
+    color: #aaa; max-width: 520px;
+    margin-bottom: 44px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex; gap: 16px; align-items: center;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--gold); color: var(--black);
+    padding: 16px 36px; border: none; border-radius: 2px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
+    cursor: pointer; text-decoration: none;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  .btn-ghost {
+    background: transparent; color: var(--text);
+    padding: 16px 36px; border: 1px solid var(--border); border-radius: 2px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    cursor: pointer; text-decoration: none;
+    transition: all 0.2s; display: inline-block;
+  }
+  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* STATS STRIP */
+  .stats {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 48px;
+    display: flex; gap: 0;
+  }
+
+  .stat {
+    flex: 1; padding: 0 40px;
+    border-right: 1px solid var(--border);
+  }
+  .stat:first-child { padding-left: 0; }
+  .stat:last-child { border-right: none; }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px; font-weight: 900;
+    color: var(--gold); line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-label { font-size: 12px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+
+  /* PROBLEM */
+  .section { padding: 100px 48px; }
+
+  .section-tag {
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 700; line-height: 1.15;
+    letter-spacing: -1px; margin-bottom: 20px;
+  }
+
+  .section-sub {
+    font-size: 17px; color: #888; line-height: 1.7;
+    max-width: 540px; margin-bottom: 60px;
+  }
+
+  .problem-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: var(--border); border: 1px solid var(--border);
+  }
+
+  .problem-card {
+    background: var(--surface);
+    padding: 36px 32px;
+    transition: background 0.2s;
+  }
+  .problem-card:hover { background: var(--surface2); }
+
+  .problem-icon {
+    font-size: 28px; margin-bottom: 16px;
+  }
+
+  .problem-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; margin-bottom: 12px; font-weight: 700;
+  }
+
+  .problem-card p { font-size: 14px; color: #777; line-height: 1.7; }
+
+  /* HOW IT WORKS */
+  .how-section {
+    padding: 100px 48px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 60px; }
+
+  .step {
+    padding: 32px 28px;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+  .step:last-child { border-right: none; }
+
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 64px; font-weight: 900;
+    color: var(--border); line-height: 1;
+    margin-bottom: 16px;
+    transition: color 0.3s;
+  }
+  .step:hover .step-num { color: var(--gold-dim); }
+
+  .step h3 {
+    font-size: 16px; font-weight: 500;
+    margin-bottom: 10px; color: var(--text);
+    letter-spacing: 0.5px;
+  }
+
+  .step p { font-size: 13px; color: #666; line-height: 1.7; }
+
+  .step-badge {
+    display: inline-block; margin-bottom: 12px;
+    background: rgba(201,168,76,0.1); border: 1px solid var(--gold-dim);
+    color: var(--gold); font-size: 10px; letter-spacing: 2px;
+    text-transform: uppercase; padding: 3px 10px; border-radius: 2px;
+  }
+
+  /* PRICING */
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    margin-top: 60px;
+  }
+
+  .pricing-card {
+    border: 1px solid var(--border);
+    padding: 40px 36px;
+    position: relative;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .pricing-card:hover { border-color: var(--gold-dim); transform: translateY(-4px); }
+
+  .pricing-card.featured {
+    border-color: var(--gold);
+    background: linear-gradient(160deg, rgba(201,168,76,0.06) 0%, transparent 60%);
+  }
+
+  .featured-badge {
+    position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+    background: var(--gold); color: var(--black);
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    padding: 4px 16px; font-weight: 500;
+  }
+
+  .plan-name {
+    font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 16px;
+  }
+
+  .plan-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px; font-weight: 900; color: var(--text);
+    line-height: 1; margin-bottom: 4px;
+  }
+
+  .plan-price span { font-size: 20px; color: var(--muted); }
+  .plan-period { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+
+  .plan-features { list-style: none; margin-bottom: 32px; }
+  .plan-features li {
+    font-size: 14px; color: #aaa; padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .plan-features li::before { content: '✦'; color: var(--gold); font-size: 8px; }
+
+  /* TESTIMONIALS */
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    margin-top: 60px;
+  }
+
+  .testimonial {
+    border: 1px solid var(--border); padding: 32px 28px;
+    transition: border-color 0.2s;
+  }
+  .testimonial:hover { border-color: var(--gold-dim); }
+
+  .stars { color: var(--gold); font-size: 14px; margin-bottom: 16px; letter-spacing: 2px; }
+
+  .testimonial p {
+    font-size: 15px; line-height: 1.7; color: #bbb;
+    font-style: italic; margin-bottom: 20px;
+  }
+
+  .testimonial-author { font-size: 13px; color: var(--muted); }
+  .testimonial-author strong { color: var(--text); display: block; margin-bottom: 2px; }
+
+  /* CONTACT */
+  .contact-section {
+    padding: 100px 48px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+  }
+
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+    max-width: 960px;
+  }
+
+  .contact-info h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px; font-weight: 700;
+    line-height: 1.2; margin-bottom: 20px;
+    letter-spacing: -1px;
+  }
+
+  .contact-info p { font-size: 16px; color: #888; line-height: 1.7; margin-bottom: 36px; }
+
+  .contact-detail {
+    display: flex; gap: 14px; align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .contact-detail-icon {
+    width: 36px; height: 36px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+
+  .contact-detail-text { font-size: 14px; color: #888; }
+  .contact-detail-text strong { display: block; color: var(--text); margin-bottom: 2px; }
+
+  .form-group { margin-bottom: 20px; }
+
+  .form-group label {
+    display: block; font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%; background: var(--black);
+    border: 1px solid var(--border); border-radius: 2px;
+    padding: 14px 16px; color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    transition: border-color 0.2s; outline: none;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--gold); }
+
+  .form-group textarea { height: 100px; resize: vertical; }
+  .form-group select option { background: #111; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* FOOTER */
+  footer {
+    padding: 40px 48px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 900; color: var(--gold);
+  }
+
+  footer p { font-size: 12px; color: var(--muted); }
+
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-size: 12px; color: var(--muted); text-decoration: none; }
+  .footer-links a:hover { color: var(--gold); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-up {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  /* SCROLLING TICKER */
+  .ticker {
+    background: var(--gold); padding: 10px 0;
+    overflow: hidden; white-space: nowrap;
+  }
+
+  .ticker-inner {
+    display: inline-block;
+    animation: ticker 25s linear infinite;
+  }
+
+  .ticker-inner span {
+    font-size: 12px; font-weight: 500; color: var(--black);
+    letter-spacing: 3px; text-transform: uppercase;
+    padding: 0 32px;
+  }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    nav ul { display: none; }
+    .hero { padding: 100px 20px 60px; }
+    .stats { padding: 24px 20px; flex-wrap: wrap; }
+    .stat { padding: 16px 20px; border-right: none; border-bottom: 1px solid var(--border); flex: 1 1 50%; }
+    .section, .how-section, .contact-section { padding: 60px 20px; }
+    .problem-grid, .steps, .pricing-grid, .testimonials-grid { grid-template-columns: 1fr; }
+    .step { border-right: none; border-bottom: 1px solid var(--border); }
+    .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
-  <a href="/" class="nav-logo">Repu<span>LV</span></a>
-  <div class="nav-links">
-    <a href="#features">Features</a>
-    <a href="#pricing">Pricing</a>
-    <a href="#faq">FAQ</a>
-    <a href="dashboard.html" class="nav-login">Login</a>
-    <a href="#contact" class="nav-cta">Start Free Trial</a>
-  </div>
+  <div class="logo">Repu<span>LV</span></div>
+  <ul>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="dashboard.html" style="color:var(--gold);font-weight:600;text-decoration:none;">Login</a></li><li><a href="#contact" class="nav-cta">Get Started</a></li>
+  </ul>
 </nav>
-<div class="urgency">&#9889; <span>3 Las Vegas businesses signed up this week</span> &mdash; 14-day free trial, no credit card required</div>
-<section class="hero" style="color:#f0ede6!important">
 
-  <div style="position:relative;z-index:2;width:100%;display:flex;flex-direction:column;align-items:center;"><div class="hero-eyebrow">&#127942; Vegas Built &middot; Vegas Owned &middot; Vegas Proud</div>
-  <h1 style="color:#f0ede6;font-family:Georgia,serif;font-size:clamp(36px,6vw,80px);font-weight:900;line-height:1.1;margin-bottom:24px;">While You Sleep,<br><span style="color:#c9a84c;">RepuLV Protects</span><br>Your Reputation</h1>
-  <p style="color:#9b98a8;font-size:18px;max-width:560px;line-height:1.7;margin-bottom:40px;">AI-powered review monitoring and responses for Las Vegas businesses. Never miss a bad review. Never lose a customer you could have saved.</p>
-  <div class="hero-btns">
-    <a href="#contact" class="btn-primary">Start My Free 14-Day Trial &rarr;</a>
-    <a href="#features" class="btn-ghost">See How It Works</a>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <div class="badge-dot"></div>
+      Now serving Las Vegas businesses
+    </div>
+    <h1>
+      Your reviews,
+      <em>on autopilot.</em>
+    </h1>
+    <p>RepuLV uses AI to monitor, respond to, and generate 5-star reviews for your Las Vegas business — 24/7, completely automated. You focus on running your business. We handle your reputation.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Start Free Trial</a>
+      <a href="#how" class="btn-ghost">See How It Works</a>
+    </div>
   </div>
-  <div class="mockup-wrap">
-    <div class="mockup-inner">
-      <div class="mockup-glow"></div>
-      <div class="mockup-screen">
-        <div class="m-topbar">
-          <div class="m-dot" style="background:#ff5f57"></div>
-          <div class="m-dot" style="background:#febc2e"></div>
-          <div class="m-dot" style="background:#28c840"></div>
-          <div style="flex:1;height:6px;background:rgba(255,255,255,0.04);border-radius:3px;margin-left:8px;max-width:200px;"></div>
-          <div style="margin-left:auto"><span class="alert-badge">&#128680; New 2&#9733; Review</span></div>
-        </div>
-        <div class="m-stats">
-          <div class="m-stat"><div class="m-stat-label">Avg Rating</div><div class="m-stat-val" style="color:#c9a84c">4.7 &#11088;</div></div>
-          <div class="m-stat"><div class="m-stat-label">Total Reviews</div><div class="m-stat-val">142</div></div>
-          <div class="m-stat"><div class="m-stat-label">Response Rate</div><div class="m-stat-val" style="color:#22c55e">97%</div></div>
-          <div class="m-stat"><div class="m-stat-label">Rep Score</div><div class="m-stat-val" style="color:#c9a84c">847</div></div>
-        </div>
-        <div class="m-grid">
-          <div class="m-card">
-            <div class="m-card-title">Recent Reviews</div>
-            <div class="m-review"><div class="m-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="m-review-name">Jessica M. &middot; Google</div><div class="m-review-text">Amazing service, best in Las Vegas!</div></div>
-            <div class="m-review"><div class="m-stars">&#9733;&#9733;&#9734;&#9734;&#9734;</div><div class="m-review-name">Mike T. &middot; Yelp</div><div class="m-review-text">Wait time was too long...</div><div class="ai-resp">&#129302; AI: "Thank you Mike, we sincerely apologize..."</div></div>
-            <div class="m-review"><div class="m-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="m-review-name">Sarah K. &middot; TripAdvisor</div><div class="m-review-text">Best experience in Vegas!</div></div>
-          </div>
-          <div class="m-card">
-            <div class="m-card-title">Rating Breakdown</div>
-            <div class="m-bar-label">5 stars</div><div class="m-bar" style="background:rgba(201,168,76,0.6);width:75%"></div>
-            <div class="m-bar-label">4 stars</div><div class="m-bar" style="background:rgba(201,168,76,0.4);width:15%"></div>
-            <div class="m-bar-label">3 stars</div><div class="m-bar" style="background:rgba(201,168,76,0.2);width:5%"></div>
-            <div class="m-bar-label">2 stars</div><div class="m-bar" style="background:rgba(239,68,68,0.4);width:3%"></div>
-            <div class="m-bar-label">1 star</div><div class="m-bar" style="background:rgba(239,68,68,0.6);width:2%"></div>
-            <div style="margin-top:12px;padding:8px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:6px;font-size:9px;color:#4ade80">&#129302; Autopilot: ON &mdash; responding 24/7</div>
-          </div>
-        </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span>★ Google Reviews</span>
+    <span>★ Yelp</span>
+    <span>★ TripAdvisor</span>
+    <span>★ Facebook</span>
+    <span>★ Automated Responses</span>
+    <span>★ Review Requests</span>
+    <span>★ Reputation Monitoring</span>
+    <span>★ Weekly Reports</span>
+    <span>★ Google Reviews</span>
+    <span>★ Yelp</span>
+    <span>★ TripAdvisor</span>
+    <span>★ Facebook</span>
+    <span>★ Automated Responses</span>
+    <span>★ Review Requests</span>
+    <span>★ Reputation Monitoring</span>
+    <span>★ Weekly Reports</span>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat fade-up">
+    <div class="stat-num">94%</div>
+    <div class="stat-label">of customers read reviews before visiting</div>
+  </div>
+  <div class="stat fade-up">
+    <div class="stat-num">3.7×</div>
+    <div class="stat-label">more revenue for businesses with 4+ stars</div>
+  </div>
+  <div class="stat fade-up">
+    <div class="stat-num">89%</div>
+    <div class="stat-label">of negative reviews go unanswered</div>
+  </div>
+  <div class="stat fade-up">
+    <div class="stat-num">$0</div>
+    <div class="stat-label">effort from you after setup</div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="section">
+  <div class="section-tag">The Problem</div>
+  <h2 class="section-title">Your reputation is<br>leaking money every day.</h2>
+  <p class="section-sub">Las Vegas runs on reviews. A single unanswered 1-star can cost you dozens of customers. Most owners know this — but nobody has time to manage it.</p>
+
+  <div class="problem-grid">
+    <div class="problem-card fade-up">
+      <div class="problem-icon">😤</div>
+      <h3>Negative Reviews Ignored</h3>
+      <p>89% of bad reviews never get a response. Potential customers see that silence and walk away. Every unanswered complaint is lost revenue.</p>
+    </div>
+    <div class="problem-card fade-up">
+      <div class="problem-icon">🕐</div>
+      <h3>No Time to Ask for Reviews</h3>
+      <p>Happy customers leave and never write a review unless asked. But following up manually is tedious work you never get to.</p>
+    </div>
+    <div class="problem-card fade-up">
+      <div class="problem-icon">📉</div>
+      <h3>Slipping Star Rating</h3>
+      <p>One bad month can drag your rating down for years. Without a system, your Google ranking slowly declines and new customers can't find you.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="section-tag">The Solution</div>
+  <h2 class="section-title">Set it up once.<br>It runs itself forever.</h2>
+  <p class="section-sub">RepuLV's AI connects to all your review platforms and handles everything automatically. Here's exactly what happens:</p>
+
+  <div class="steps">
+    <div class="step fade-up">
+      <div class="step-num">01</div>
+      <div class="step-badge">Day 1</div>
+      <h3>We Connect Your Profiles</h3>
+      <p>We link your Google, Yelp, TripAdvisor, and Facebook profiles. Takes 10 minutes. You never touch it again.</p>
+    </div>
+    <div class="step fade-up">
+      <div class="step-num">02</div>
+      <div class="step-badge">Always On</div>
+      <h3>AI Monitors 24/7</h3>
+      <p>Every new review across every platform is detected within minutes. Our AI reads the sentiment and context instantly.</p>
+    </div>
+    <div class="step fade-up">
+      <div class="step-num">03</div>
+      <div class="step-badge">Automatic</div>
+      <h3>Responses Go Out</h3>
+      <p>AI crafts a personalized, on-brand response and posts it — no copy-paste, no templates. Real responses, every time.</p>
+    </div>
+    <div class="step fade-up">
+      <div class="step-num">04</div>
+      <div class="step-badge">Weekly</div>
+      <h3>You Get a Report</h3>
+      <p>Every Monday, one clean email shows your rating trend, new reviews, and anything flagged for your attention. That's it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <div class="section-tag">Pricing</div>
+  <h2 class="section-title">Simple, flat pricing.<br>No surprises.</h2>
+  <p class="section-sub">Cancel anytime. No contracts. Most businesses make back their monthly fee in the first week from recovered customers.</p>
+
+  <div class="pricing-grid">
+    <div class="pricing-card fade-up">
+      <div class="plan-name">Starter</div>
+      <div class="plan-price"><span>$</span>97</div>
+      <div class="plan-period">per month</div>
+      <ul class="plan-features">
+        <li>1 Business Location</li>
+        <li>Google + Yelp Monitoring</li>
+        <li>AI Review Responses</li>
+        <li>Review Request Texts</li>
+        <li>Weekly Email Report</li>
+        <li>Negative Review Alerts</li>
+      </ul>
+      <a href="#contact" class="btn-ghost" style="width:100%;text-align:center;display:block;">Get Started</a>
+    </div>
+
+    <div class="pricing-card featured fade-up">
+      <div class="featured-badge">Most Popular</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price"><span>$</span>197</div>
+      <div class="plan-period">per month</div>
+      <ul class="plan-features">
+        <li>1 Business Location</li>
+        <li>All Platforms (Google, Yelp, Trip, FB)</li>
+        <li>AI Review Responses</li>
+        <li>Review Request Texts + Email</li>
+        <li>Negative Review Crisis Mode</li>
+        <li>Competitor Monitoring</li>
+        <li>Monthly Strategy Call</li>
+      </ul>
+      <a href="#contact" class="btn-primary" style="width:100%;text-align:center;display:block;">Start Free Trial</a>
+    </div>
+
+    <div class="pricing-card fade-up">
+      <div class="plan-name">Agency</div>
+      <div class="plan-price"><span>$</span>397</div>
+      <div class="plan-period">per month</div>
+      <ul class="plan-features">
+        <li>Up to 5 Locations</li>
+        <li>All Platforms</li>
+        <li>Everything in Pro</li>
+        <li>Dedicated Account Manager</li>
+        <li>Custom Response Tone & Brand</li>
+        <li>Priority Support</li>
+        <li>Quarterly Reputation Audit</li>
+      </ul>
+      <a href="#contact" class="btn-ghost" style="width:100%;text-align:center;display:block;">Contact Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section" style="padding-top:0;">
+  <div class="section-tag">Results</div>
+  <h2 class="section-title">Las Vegas businesses<br>winning with RepuLV.</h2>
+
+  <div class="testimonials-grid">
+    <div class="testimonial fade-up">
+      <div class="stars">★★★★★</div>
+      <p>"We went from 3.8 to 4.6 stars on Google in just 6 weeks. I didn't do a single thing — the system handled every response automatically."</p>
+      <div class="testimonial-author">
+        <strong>Maria G.</strong>
+        Owner, Eastside Nail Studio — Las Vegas
+      </div>
+    </div>
+    <div class="testimonial fade-up">
+      <div class="stars">★★★★★</div>
+      <p>"A bad review came in on a Friday night. RepuLV responded within 4 minutes with a perfect message. The customer called us Saturday and removed it."</p>
+      <div class="testimonial-author">
+        <strong>James T.</strong>
+        Manager, Flamingo BBQ — Henderson
+      </div>
+    </div>
+    <div class="testimonial fade-up">
+      <div class="stars">★★★★★</div>
+      <p>"We're a busy spa with 3 locations. Managing reviews was a nightmare. Now I check one email Monday morning and I'm done. Game changer."</p>
+      <div class="testimonial-author">
+        <strong>Sandra L.</strong>
+        Owner, The Luxe Spa — Las Vegas Strip
       </div>
     </div>
   </div>
 </section>
-<div class="trust-bar">
-  <div class="trust-item">&#128274; Secured by Stripe</div>
-  <div class="trust-item">&#11088; Google Reviews</div>
-  <div class="trust-item">&#127829; Yelp Connected</div>
-  <div class="trust-item">&#9992;&#65039; TripAdvisor</div>
-  <div class="trust-item">&#128205; Las Vegas Owned</div>
-  <div class="trust-item">&#127482;&#127480; American Made</div>
-  <div class="trust-item">&#10060; No Contracts</div>
-</div>
-<div class="ticker-wrap">
-  <div class="ticker-track">
-    <div class="ticker-item"><span class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> Amazing service! &mdash; Maria G., Las Vegas</div>
-    <div class="ticker-item"><span class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> Best nail salon on the Strip &mdash; Jennifer K.</div>
-    <div class="ticker-item"><span class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> Fast response, very professional &mdash; Carlos M.</div>
-    <div class="ticker-item"><span class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> Incredible food, 10/10 &mdash; Ashley T.</div>
-    <div class="ticker-item"><span class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> They responded in minutes! &mdash; David L.</div>
-    <div class="ticker-item"><span class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> Best experience in Vegas &mdash; Sarah W.</div>
-    <div class="ticker-item"><span class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> Amazing service! &mdash; Maria G., Las Vegas</div>
-    <div class="ticker-item"><span class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> Best nail salon on the Strip &mdash; Jennifer K.</div>
-    <div class="ticker-item"><span class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> Fast response, very professional &mdash; Carlos M.</div>
-    <div class="ticker-item"><span class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> Incredible food, 10/10 &mdash; Ashley T.</div>
-    <div class="ticker-item"><span class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> They responded in minutes! &mdash; David L.</div>
-    <div class="ticker-item"><span class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> Best experience in Vegas &mdash; Sarah W.</div>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-grid">
+    <div class="contact-info">
+      <div class="section-tag">Get Started</div>
+      <h2>Let's protect your reputation — starting this week.</h2>
+      <p>Fill out the form and we'll set up your free 14-day trial. No credit card required. We'll have your business connected within 24 hours.</p>
+
+      <div class="contact-detail">
+        <div class="contact-detail-icon">📍</div>
+        <div class="contact-detail-text">
+          <strong>Serving All of Las Vegas</strong>
+          North Las Vegas · Henderson · Summerlin · The Strip
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">⚡</div>
+        <div class="contact-detail-text">
+          <strong>Setup in 24 Hours</strong>
+          We connect everything. You do nothing.
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">🔒</div>
+        <div class="contact-detail-text">
+          <strong>No Contracts</strong>
+          Cancel any time. No questions asked.
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" placeholder="John Smith">
+        </div>
+        <div class="form-group">
+          <label>Business Name</label>
+          <input type="text" placeholder="Smith's Restaurant">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" placeholder="(702) 555-0100">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="john@business.com">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Business Type</label>
+        <select>
+          <option value="">Select your industry</option>
+          <option>Restaurant / Bar</option>
+          <option>Spa / Nail Salon</option>
+          <option>Barbershop</option>
+          <option>Hotel / Hospitality</option>
+          <option>Auto Service</option>
+          <option>Medical / Dental</option>
+          <option>Retail Store</option>
+          <option>Entertainment / Escape Room</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Current Google Rating (if known)</label>
+        <input type="text" placeholder="e.g. 3.9 stars">
+      </div>
+      <button class="btn-primary" style="width:100%" onclick="handleSubmit(this)">
+        Start My Free 14-Day Trial →
+      </button>
+      <p style="font-size:12px;color:#555;text-align:center;margin-top:12px;">No credit card required. Setup within 24 hours.</p>
+    </div>
   </div>
-</div>
-<section><div class="container"><div class="stats-section reveal"><div style="text-align:center;margin-bottom:48px"><span class="section-tag">The Numbers</span><h2 class="section-title" style="text-align:center">Your <span>reputation</span> is your revenue</h2></div><div class="stats-grid"><div><div class="stat-num" data-target="94">0</div><div class="stat-label">% of customers read reviews before visiting</div></div><div><div class="stat-num" data-target="35">0</div><div class="stat-label">% more revenue for businesses that respond</div></div><div><div class="stat-num" data-suffix="M" data-target="42">0</div><div class="stat-label">tourists visit Las Vegas every year</div></div><div><div class="stat-num" data-prefix="$" data-target="97">0</div><div class="stat-label">per month starting price</div></div></div></div></div></section>
-<section id="features"><div class="container"><div style="text-align:center" class="reveal"><span class="section-tag">Features</span><h2 class="section-title">Everything your reputation needs</h2><p class="section-sub">Built specifically for Las Vegas businesses.</p></div><div class="features-grid reveal"><div class="feature-card"><div class="feature-icon">&#129302;</div><div class="feature-title">Autopilot Mode</div><div class="feature-desc">AI responds to every review automatically 24/7. Zero clicks required.</div></div><div class="feature-card"><div class="feature-icon">&#128680;</div><div class="feature-title">Instant Alerts</div><div class="feature-desc">Bad review? You get a text and email within 60 seconds.</div></div><div class="feature-card"><div class="feature-icon">&#128202;</div><div class="feature-title">Analytics Dashboard</div><div class="feature-desc">Staff performance, keyword analysis, tourist vs local detection.</div></div><div class="feature-card"><div class="feature-icon">&#128373;&#65039;</div><div class="feature-title">Competitor Spy Mode</div><div class="feature-desc">Track competitors' ratings. Get alerted when they drop.</div></div><div class="feature-card"><div class="feature-icon">&#128270;</div><div class="feature-title">Fake Review Detector</div><div class="feature-desc">AI detects suspicious reviews and generates a Google dispute letter.</div></div><div class="feature-card"><div class="feature-icon">&#128140;</div><div class="feature-title">Review Campaigns</div><div class="feature-desc">Send customers review request emails after their visit.</div></div><div class="feature-card"><div class="feature-icon">&#128247;</div><div class="feature-title">QR Code Generator</div><div class="feature-desc">One click generates a branded QR code for your review page.</div></div><div class="feature-card"><div class="feature-icon">&#127962;</div><div class="feature-title">Agency White Label</div><div class="feature-desc">Agencies earn 30% commission reselling RepuLV to clients.</div></div><div class="feature-card"><div class="feature-icon">&#11088;</div><div class="feature-title">Google, Yelp & More</div><div class="feature-desc">Monitor all platforms from one dashboard. Never miss a review.</div></div></div></div></section>
-<section id="calculator"><div class="container"><div style="text-align:center" class="reveal"><span class="section-tag">ROI Calculator</span><h2 class="section-title">How much is your reputation <span>costing you?</span></h2><p class="section-sub" style="margin-bottom:40px">Enter your numbers and see what bad reviews cost you every month.</p></div><div class="calc-box reveal"><div class="calc-inputs"><div><div class="calc-label">Monthly Revenue ($)</div><input type="number" class="calc-input" id="calc-rev" value="50000" oninput="calcROI()"></div><div><div class="calc-label">Current Star Rating</div><input type="number" class="calc-input" id="calc-rat" value="4.1" step="0.1" min="1" max="5" oninput="calcROI()"></div></div><div class="calc-results"><div class="calc-result"><div class="calc-num" id="c-lost">$2,500</div><div class="calc-desc">Monthly revenue lost to bad reviews</div></div><div class="calc-result"><div class="calc-num" id="c-gain">$4,250</div><div class="calc-desc">Projected monthly gain with RepuLV</div></div><div class="calc-result hl"><div class="calc-num" id="c-roi">43x</div><div class="calc-desc">Return on investment at $97/mo</div></div></div><div style="text-align:center;margin-top:28px"><a href="#contact" class="btn-primary">Start Protecting My Revenue &rarr;</a></div></div></div></section>
-<section id="compare"><div class="container"><div style="text-align:center" class="reveal"><span class="section-tag">Comparison</span><h2 class="section-title">RepuLV vs <span>The Competition</span></h2><p class="section-sub" style="margin-bottom:40px">Big companies charge 3-5x more and are not built for Las Vegas.</p></div><div style="overflow-x:auto" class="reveal"><table class="comp-table"><thead><tr><th>Feature</th><th class="rv">RepuLV</th><th>Birdeye</th><th>Podium</th><th>Reputation.com</th></tr></thead><tbody><tr><td>Starting Price</td><td class="rv"><span class="c-price" style="color:var(--gold)">$97/mo</span></td><td><span class="c-price">$299/mo</span></td><td><span class="c-price">$399/mo</span></td><td><span class="c-price">$500+/mo</span></td></tr><tr><td>Autopilot AI Responses</td><td class="rv"><span class="c-check">&#10003;</span></td><td><span class="c-cross">&#10007;</span></td><td><span class="c-cross">&#10007;</span></td><td><span class="c-cross">&#10007;</span></td></tr><tr><td>Fake Review Detector</td><td class="rv"><span class="c-check">&#10003;</span></td><td><span class="c-cross">&#10007;</span></td><td><span class="c-cross">&#10007;</span></td><td><span class="c-cross">&#10007;</span></td></tr><tr><td>Competitor Spy Mode</td><td class="rv"><span class="c-check">&#10003;</span></td><td><span class="c-cross">&#10007;</span></td><td><span class="c-cross">&#10007;</span></td><td><span class="c-cross">&#10007;</span></td></tr><tr><td>Built for Las Vegas</td><td class="rv"><span class="c-check">&#10003;</span></td><td><span class="c-cross">&#10007;</span></td><td><span class="c-cross">&#10007;</span></td><td><span class="c-cross">&#10007;</span></td></tr><tr><td>No Long-Term Contract</td><td class="rv"><span class="c-check">&#10003;</span></td><td><span class="c-cross">&#10007;</span></td><td><span class="c-cross">&#10007;</span></td><td><span class="c-cross">&#10007;</span></td></tr><tr><td>14-Day Free Trial</td><td class="rv"><span class="c-check">&#10003;</span></td><td><span class="c-cross">&#10007;</span></td><td><span class="c-cross">&#10007;</span></td><td><span class="c-cross">&#10007;</span></td></tr><tr><td>Agency White Label</td><td class="rv"><span class="c-check">&#10003;</span></td><td><span class="c-check">&#10003;</span></td><td><span class="c-cross">&#10007;</span></td><td><span class="c-check">&#10003;</span></td></tr></tbody></table></div></div></section>
-<section id="pricing"><div class="container"><div style="text-align:center" class="reveal"><span class="section-tag">Pricing</span><h2 class="section-title">Simple pricing. <span>Everything included.</span></h2><p class="section-sub">No setup fees. No hidden costs. Cancel anytime. Start free for 14 days.</p></div><div class="pricing-grid reveal"><div class="pricing-card"><div class="pricing-name">Starter</div><div class="pricing-tag">One location. Full AI protection.</div><div class="pricing-price"><span class="p-dollar">$</span><span class="p-amount">97</span><span class="p-period">/month</span></div><div class="p-divider"></div><ul class="p-features"><li><span class="p-check">&#10003;</span><span><strong>1 business location</strong></span></li><li><span class="p-check">&#10003;</span><span>Google, Yelp &amp; TripAdvisor</span></li><li><span class="p-check">&#10003;</span><span>AI-generated responses</span></li><li><span class="p-check">&#10003;</span><span>Instant email alerts</span></li><li><span class="p-check">&#10003;</span><span>14-day free trial</span></li></ul><a href="dashboard.html" class="p-btn outline">Start Free Trial</a></div><div class="pricing-card featured"><div class="pricing-badge">Most Popular</div><div class="pricing-name">Pro</div><div class="pricing-tag">Multi-location power for growing businesses.</div><div class="pricing-price"><span class="p-dollar">$</span><span class="p-amount">197</span><span class="p-period">/month</span></div><div class="p-divider"></div><ul class="p-features"><li><span class="p-check">&#10003;</span><span><strong>Up to 3 locations</strong></span></li><li><span class="p-check">&#10003;</span><span>All platforms + Facebook</span></li><li><span class="p-check">&#10003;</span><span>Priority AI responses</span></li><li><span class="p-check">&#10003;</span><span>SMS + email alerts</span></li><li><span class="p-check">&#10003;</span><span>Competitor spy mode</span></li></ul><a href="dashboard.html" class="p-btn gold">Choose Pro &rarr;</a></div><div class="pricing-card"><div class="pricing-name">Enterprise</div><div class="pricing-tag">Unlimited locations for agencies &amp; groups.</div><div class="pricing-price"><span class="p-dollar">$</span><span class="p-amount">397</span><span class="p-period">/month</span></div><div class="p-divider"></div><ul class="p-features"><li><span class="p-check">&#10003;</span><span><strong>Unlimited locations</strong></span></li><li><span class="p-check">&#10003;</span><span>All platforms + BBB</span></li><li><span class="p-check">&#10003;</span><span>White-glove onboarding</span></li><li><span class="p-check">&#10003;</span><span>Dedicated account manager</span></li><li><span class="p-check">&#10003;</span><span>Weekly strategy call</span></li></ul><a href="billing.html" class="p-btn outline">Get Enterprise</a></div></div></div></section>
-<section id="story"><div class="container"><div class="story-grid reveal"><div><span class="section-tag">Our Story</span><h2 class="section-title">Vegas Built.<br><span>Vegas Owned.</span></h2><p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:16px">RepuLV was born right here in Las Vegas &mdash; built by a local entrepreneur who watched great Vegas businesses lose customers to bad reviews they never saw coming.</p><p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:16px">We built the tool we wished existed. Not some Silicon Valley startup guessing what a Vegas restaurant needs. We live here.</p><p style="font-size:15px;color:var(--gold);font-weight:600;margin-bottom:24px">"Your reputation is your most valuable asset. We protect it like it is ours."</p><div style="display:flex;flex-wrap:wrap;gap:8px"><span class="story-badge">&#128205; Las Vegas, Nevada</span><span class="story-badge">&#127482;&#127480; American Owned</span><span class="story-badge">&#129309; Community First</span></div></div><div class="story-visual"><div style="font-size:72px;margin-bottom:20px">&#127750;</div><div class="story-stat-grid"><div class="story-stat"><div class="story-stat-num">32K+</div><div class="story-stat-label">LV Small Businesses</div></div><div class="story-stat"><div class="story-stat-num">42M</div><div class="story-stat-label">Annual Tourists</div></div><div class="story-stat"><div class="story-stat-num">$97</div><div class="story-stat-label">Starting Price</div></div><div class="story-stat"><div class="story-stat-num">24/7</div><div class="story-stat-label">Always Watching</div></div></div></div></div></div></section>
-<section id="faq"><div class="container"><div style="text-align:center" class="reveal"><span class="section-tag">FAQ</span><h2 class="section-title">Got questions? <span>We have answers.</span></h2><p class="section-sub" style="margin-bottom:48px">Everything you need to know before getting started.</p></div><div class="faq-list reveal"><div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Does RepuLV work for my type of business? <span class="faq-arrow">+</span></button><div class="faq-a">Yes. RepuLV works for any Las Vegas business with online reviews &mdash; restaurants, nail salons, barbershops, hotels, auto dealers, medical offices, retail, and more.</div></div><div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">How long does setup take? <span class="faq-arrow">+</span></button><div class="faq-a">Most businesses are fully set up within 24 hours. Create your account, add your business info, and connect your review platforms. We handle everything else.</div></div><div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What if I already have bad reviews? <span class="faq-arrow">+</span></button><div class="faq-a">RepuLV helps you respond to existing bad reviews professionally. Responding &mdash; even to old reviews &mdash; shows future customers that you care.</div></div><div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Can I cancel anytime? <span class="faq-arrow">+</span></button><div class="faq-a">Yes. Cancel anytime with one click. No fees, no penalties, no questions asked.</div></div><div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Do I need a credit card to start? <span class="faq-arrow">+</span></button><div class="faq-a">No. Your 14-day free trial starts with just your email. No credit card required.</div></div></div></div></section>
-<section class="contact-section" id="contact"><div class="container"><div class="contact-grid"><div><span class="section-tag">Get Started</span><h2 class="section-title">Let us protect your reputation &mdash; <span>starting today.</span></h2><p style="color:var(--muted);font-size:15px;line-height:1.7;margin-bottom:32px">Fill out the form and we will have your business connected within 24 hours. No credit card required.</p><div style="display:flex;flex-direction:column;gap:16px"><div style="display:flex;gap:14px;align-items:flex-start"><span style="font-size:20px">&#128205;</span><div><strong style="display:block;margin-bottom:2px">Serving All of Las Vegas</strong><span style="font-size:14px;color:var(--muted)">The Strip &middot; Summerlin &middot; Henderson &middot; Downtown</span></div></div><div style="display:flex;gap:14px;align-items:flex-start"><span style="font-size:20px">&#9889;</span><div><strong style="display:block;margin-bottom:2px">Setup in 24 Hours</strong><span style="font-size:14px;color:var(--muted)">We connect everything. You do nothing.</span></div></div><div style="display:flex;gap:14px;align-items:flex-start"><span style="font-size:20px">&#128274;</span><div><strong style="display:block;margin-bottom:2px">No Contracts. No Risk.</strong><span style="font-size:14px;color:var(--muted)">Cancel any time. No questions asked.</span></div></div><div style="display:flex;gap:14px;align-items:flex-start"><span style="font-size:20px">&#128231;</span><div><strong style="display:block;margin-bottom:2px">Questions?</strong><span style="font-size:14px;color:var(--muted)">repulv@gmail.com &mdash; we respond within 2 hours</span></div></div></div></div><div class="contact-form-box"><div class="form-row"><div class="form-group"><label>Your Name</label><input type="text" placeholder="John Smith"></div><div class="form-group"><label>Business Name</label><input type="text" placeholder="Smith Restaurant"></div></div><div class="form-row"><div class="form-group"><label>Phone Number</label><input type="tel" placeholder="(702) 555-0100"></div><div class="form-group"><label>Email</label><input type="email" placeholder="john@business.com"></div></div><div class="form-group"><label>Business Type</label><select><option value="">Select your industry</option><option>Restaurant / Bar</option><option>Spa / Nail Salon</option><option>Barbershop</option><option>Hotel / Hospitality</option><option>Auto Service</option><option>Medical / Dental</option><option>Retail Store</option><option>Entertainment</option><option>Other</option></select></div><div class="form-group"><label>Current Google Rating</label><input type="text" placeholder="e.g. 3.9 stars"></div><button class="btn-primary" style="width:100%;font-size:15px" onclick="handleSubmit(this)">Start My Free 14-Day Trial &rarr;</button><p style="font-size:12px;color:#333;text-align:center;margin-top:12px">No credit card required &middot; Setup within 24 hours &middot; Cancel anytime</p></div></div></div></section>
+</section>
+
+<!-- FOOTER -->
 <footer>
   <div class="footer-logo">RepuLV</div>
-  <p style="font-size:13px;color:#333">&#169; 2026 RepuLV &middot; AI Review Management &middot; Las Vegas, Nevada</p>
-  <div class="footer-links"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="#contact">Contact</a><a href="dashboard.html">Login</a><a href="agency.html">Agency</a></div>
+  <p>© 2026 RepuLV · AI Review Management · Las Vegas, Nevada</p>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="#contact">Contact</a>
+  </div>
 </footer>
-<script>
 
-const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add("visible")})},{threshold:0.08});
-document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));
-function animateCounter(el){const target=parseInt(el.dataset.target),prefix=el.dataset.prefix||"",suffix=el.dataset.suffix||"";let cur=0;const step=target/60;const t=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(t)}el.textContent=prefix+Math.floor(cur)+suffix},16)}
-const cObs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.querySelectorAll("[data-target]").forEach(animateCounter);cObs.unobserve(x.target)}})},{threshold:0.3});
-document.querySelectorAll(".stats-section").forEach(el=>cObs.observe(el));
-function calcROI(){const rev=parseFloat(document.getElementById("calc-rev").value)||0,rat=parseFloat(document.getElementById("calc-rat").value)||4,gap=Math.max(0,5-rat),lost=Math.round(rev*gap*0.05),gain=Math.round(rev*gap*0.085),roi=gain>0?Math.round(gain/97)+"x":"--";document.getElementById("c-lost").textContent="$"+lost.toLocaleString();document.getElementById("c-gain").textContent="$"+gain.toLocaleString();document.getElementById("c-roi").textContent=roi}
-calcROI();
-function toggleFaq(btn){const item=btn.parentElement,open=item.classList.contains("open");document.querySelectorAll(".faq-item").forEach(i=>i.classList.remove("open"));if(!open)item.classList.add("open")}
-async function handleSubmit(btn){const form=btn.closest(".contact-form-box"),inputs=form.querySelectorAll("input,select"),name=inputs[0].value.trim(),business=inputs[1].value.trim(),phone=inputs[2].value.trim(),email=inputs[3].value.trim(),type=inputs[4].value,rating=inputs[5].value.trim();if(!name||!email||!phone){alert("Please fill in your name, phone, and email.");return}btn.textContent="Sending...";btn.disabled=true;try{await fetch("https://repulv-backend-production.up.railway.app/leads",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,business,phone,email,type,rating})})}catch(e){}btn.textContent="Got it! Redirecting...";btn.style.background="#22c55e";btn.style.color="#fff";setTimeout(()=>{window.location.href="dashboard.html"},1500)}
-document.querySelectorAll("a[href^="#"]").forEach(a=>{a.addEventListener("click",e=>{e.preventDefault();const t=document.querySelector(a.getAttribute("href"));if(t)t.scrollIntoView({behavior:"smooth"})})});
+<script>
+  // Scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Form submission
+  async function handleSubmit(btn) {
+    const form = btn.closest('.contact-form');
+    const inputs = form.querySelectorAll('input, select');
+    const name = inputs[0].value.trim();
+    const business = inputs[1].value.trim();
+    const phone = inputs[2].value.trim();
+    const email = inputs[3].value.trim();
+    const type = inputs[4].value;
+    const rating = inputs[5].value.trim();
+    if (!name || !email || !phone) { alert('Please fill in your name, phone, and email.'); return; }
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    try {
+      await fetch('https://repulv-backend-production.up.railway.app/leads', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, business, phone, email, type, rating })
+      });
+    } catch(e) {}
+    btn.textContent = '✓ Got it! Redirecting you now...';
+    btn.style.background = '#22c55e';
+    btn.style.color = '#fff';
+    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+  }
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
 </script>
 </body>
 </html>
