@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fake Review Detector — RepuLV</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#c8a84b;--gold-light:#f5d98e;--bg:#08080f;--surface:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.07);--text:#e8e6f0;--muted:#555;--green:#22c55e;--red:#ef4444;--yellow:#eab308}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.topbar{background:rgba(255,255,255,0.02);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:20px;font-weight:900}.logo span{color:var(--gold)}
+.back{background:none;border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;text-decoration:none;display:inline-block}
+.main{padding:32px;max-width:800px;margin:0 auto}
+.page-title{font-size:24px;font-weight:900;letter-spacing:-0.5px;margin-bottom:4px}
+.page-sub{color:var(--muted);font-size:14px;margin-bottom:32px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px}
+.form-label{display:block;font-size:11px;font-weight:700;color:#666;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:8px}
+.form-input{width:100%;padding:12px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:var(--text);font-size:14px;font-family:inherit;outline:none;margin-bottom:16px}
+.form-input:focus{border-color:var(--gold)}
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+.btn-primary{width:100%;padding:13px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#0a0a0f;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit}
+.result-card{border-radius:16px;padding:24px;margin-bottom:16px}
+.result-safe{background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2)}
+.result-danger{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2)}
+.result-title{font-size:20px;font-weight:900;margin-bottom:8px}
+.score-bar-wrap{height:8px;background:rgba(255,255,255,0.06);border-radius:4px;margin:16px 0}
+.score-bar{height:100%;border-radius:4px;transition:width 0.5s}
+.signal-tag{display:inline-block;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#f87171;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;margin:4px}
+.dispute-box{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:16px;font-size:13px;color:#aaa;line-height:1.7;white-space:pre-wrap;font-family:monospace;margin-top:16px}
+.copy-btn{margin-top:8px;padding:8px 16px;border-radius:8px;border:1px solid rgba(200,168,75,0.3);background:rgba(200,168,75,0.08);color:var(--gold);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo">Repu<span>LV</span> <span style="font-size:13px;font-weight:500;color:var(--muted);margin-left:8px;">Fake Review Detector</span></div>
+  <a href="dashboard.html" class="back">← Dashboard</a>
+</div>
+<div class="main">
+  <div class="page-title">🔍 Fake Review Detector</div>
+  <div class="page-sub">Paste any suspicious review and our AI will analyze it for authenticity signals. If fake, we generate a dispute letter for Google.</div>
+
+  <div class="card">
+    <label class="form-label">Review Text</label>
+    <textarea class="form-input" id="r-text" rows="4" placeholder="Paste the suspicious review here..." style="resize:vertical;"></textarea>
+    <div class="form-row">
+      <div>
+        <label class="form-label">Author Name</label>
+        <input type="text" class="form-input" id="r-author" placeholder="A Google User" style="margin-bottom:0">
+      </div>
+      <div>
+        <label class="form-label">Star Rating</label>
+        <select class="form-input" id="r-rating" style="margin-bottom:0">
+          <option value="1">1 star</option>
+          <option value="2">2 stars</option>
+          <option value="3">3 stars</option>
+          <option value="4">4 stars</option>
+          <option value="5">5 stars</option>
+        </select>
+      </div>
+      <div>
+        <label class="form-label">Platform</label>
+        <select class="form-input" id="r-platform" style="margin-bottom:0">
+          <option>Google</option>
+          <option>Yelp</option>
+          <option>TripAdvisor</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn-primary" style="margin-top:16px;" onclick="detectFake()" id="detect-btn">🔍 Analyze Review</button>
+  </div>
+
+  <div id="result" style="display:none;"></div>
+</div>
+
+<script>
+const API = 'https://repulv-backend-production.up.railway.app';
+const token = localStorage.getItem('repulv_token');
+if (!token) window.location.href = 'dashboard.html';
+
+async function detectFake() {
+  const text = document.getElementById('r-text').value.trim();
+  const author = document.getElementById('r-author').value.trim() || 'Anonymous';
+  const rating = parseInt(document.getElementById('r-rating').value);
+  const platform = document.getElementById('r-platform').value;
+  if (!text) { alert('Please paste a review'); return; }
+  const btn = document.getElementById('detect-btn');
+  btn.disabled = true; btn.textContent = 'Analyzing...';
+  try {
+    const res = await fetch(`${API}/reviews/detect-fake`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ review_text: text, author, rating, platform })
+    });
+    const d = await res.json();
+    const result = document.getElementById('result');
+    result.style.display = 'block';
+    result.innerHTML = `
+      <div class="result-card ${d.isSuspicious ? 'result-danger' : 'result-safe'}">
+        <div class="result-title">${d.isSuspicious ? '🚨 Suspicious Review Detected' : '✅ Review Appears Legitimate'}</div>
+        <div style="font-size:14px;color:var(--muted);margin-bottom:12px;">${d.recommendation}</div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+          <span style="font-size:13px;color:var(--muted);">Suspicion Score:</span>
+          <span style="font-size:18px;font-weight:900;color:${d.suspicionScore >= 50 ? 'var(--red)' : d.suspicionScore >= 30 ? 'var(--yellow)' : 'var(--green)'};">${d.suspicionScore}/100</span>
+        </div>
+        <div class="score-bar-wrap">
+          <div class="score-bar" style="width:${d.suspicionScore}%;background:${d.suspicionScore >= 50 ? 'var(--red)' : d.suspicionScore >= 30 ? 'var(--yellow)' : 'var(--green)'};"></div>
+        </div>
+        ${d.signals?.length ? `<div style="margin-bottom:16px;"><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Warning Signals</div>${d.signals.map(s => `<span class="signal-tag">${s}</span>`).join('')}</div>` : ''}
+        ${d.aiVerdict ? `<div style="font-size:13px;color:var(--muted);padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;margin-bottom:16px;"><strong style="color:var(--text);">AI Analysis:</strong> ${d.aiVerdict}</div>` : ''}
+        ${d.disputeTemplate ? `<div style="margin-top:16px;"><div style="font-size:13px;font-weight:700;color:var(--red);margin-bottom:8px;">📋 Google Dispute Letter (Ready to Send)</div><div class="dispute-box">${d.disputeTemplate}</div><button class="copy-btn" onclick="navigator.clipboard.writeText(document.querySelector('.dispute-box').textContent);this.textContent='✓ Copied!'">📋 Copy Dispute Letter</button></div>` : ''}
+      </div>
+    `;
+  } catch(e) { alert('Error analyzing review'); }
+  btn.disabled = false; btn.textContent = '🔍 Analyze Review';
+}
+</script>
+</body>
+</html>
