@@ -12,7 +12,7 @@
 :root{--gold:#c9a84c;--gold-light:#e8c96a;--black:#050508;--surface:#0f0f18;--border:rgba(201,168,76,0.12);--text:#f0ede6;--muted:#6b6880}
 html{scroll-behavior:smooth}
 body{font-family:"DM Sans",sans-serif;background:var(--black);color:var(--text);overflow-x:hidden}
-#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(ellipse at 20% 20%,rgba(201,168,76,0.06) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(201,168,76,0.04) 0%,transparent 50%);pointer-events:none}
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 48px;background:rgba(5,5,8,0.8);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,0.08)}
 .nav-logo{font-family:"Playfair Display",serif;font-size:22px;font-weight:900;color:var(--text);text-decoration:none}
 .nav-logo span{color:var(--gold)}
@@ -164,7 +164,7 @@ footer{position:relative;z-index:1;background:var(--black);border-top:1px solid 
 </style>
 </head>
 <body>
-<canvas id="bg-canvas"></canvas>
+
 <nav>
   <a href="/" class="nav-logo">Repu<span>LV</span></a>
   <div class="nav-links">
@@ -266,20 +266,7 @@ footer{position:relative;z-index:1;background:var(--black);border-top:1px solid 
   <div class="footer-links"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="#contact">Contact</a><a href="dashboard.html">Login</a><a href="agency.html">Agency</a></div>
 </footer>
 <script>
-const canvas=document.getElementById("bg-canvas");
-const ctx=canvas.getContext("2d");
-let W,H;
-function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
-resize();window.addEventListener("resize",resize);
-const particles=[];
-for(let i=0;i<80;i++)particles.push({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,r:Math.random()*1.5+0.3,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,o:Math.random()*0.4+0.1});
-function draw(){
-  ctx.clearRect(0,0,W,H);
-  particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle="rgba(201,168,76,"+p.o+")";ctx.fill()});
-  for(let i=0;i<particles.length;i++)for(let j=i+1;j<particles.length;j++){const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle="rgba(201,168,76,"+(0.06*(1-d/120))+")";ctx.lineWidth=0.5;ctx.stroke()}}
-  requestAnimationFrame(draw)
-}
-draw();
+
 const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add("visible")})},{threshold:0.08});
 document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));
 function animateCounter(el){const target=parseInt(el.dataset.target),prefix=el.dataset.prefix||"",suffix=el.dataset.suffix||"";let cur=0;const step=target/60;const t=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(t)}el.textContent=prefix+Math.floor(cur)+suffix},16)}
