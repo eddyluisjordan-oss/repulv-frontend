@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Las Vegas Reputation Leaderboard — RepuLV</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#c8a84b;--gold-light:#f5d98e;--bg:#08080f;--surface:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.07);--text:#e8e6f0;--muted:#555;--green:#22c55e;--red:#ef4444}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.topbar{background:rgba(255,255,255,0.02);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:20px;font-weight:900}.logo span{color:var(--gold)}
+.back{background:none;border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;text-decoration:none;display:inline-block}
+.main{padding:32px;max-width:900px;margin:0 auto}
+.hero{text-align:center;padding:40px 0 48px}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,48px);font-weight:700;margin-bottom:8px}
+.hero h1 span{color:var(--gold)}
+.hero p{color:var(--muted);font-size:15px;margin-bottom:32px}
+.my-rank-card{background:linear-gradient(135deg,rgba(200,168,75,0.1),rgba(200,168,75,0.04));border:1px solid rgba(200,168,75,0.2);border-radius:16px;padding:24px;display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:16px}
+.my-rank-left{display:flex;align-items:center;gap:16px}
+.rank-badge{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#0a0a0f}
+.rank-info h3{font-size:18px;font-weight:800;margin-bottom:4px}
+.rank-info p{font-size:13px;color:var(--muted)}
+.rank-score{text-align:right}
+.rank-score-num{font-family:'Playfair Display',serif;font-size:36px;font-weight:700;color:var(--gold);line-height:1}
+.rank-score-label{font-size:12px;color:var(--muted);margin-top:4px}
+.leaderboard-list{display:flex;flex-direction:column;gap:10px}
+.lb-item{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:16px;transition:border-color 0.2s}
+.lb-item:hover{border-color:rgba(200,168,75,0.2)}
+.lb-item.top1{border-color:rgba(200,168,75,0.4);background:rgba(200,168,75,0.06)}
+.lb-item.top2{border-color:rgba(192,192,192,0.3)}
+.lb-item.top3{border-color:rgba(205,127,50,0.3)}
+.lb-rank{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;flex-shrink:0}
+.lb-rank.r1{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#0a0a0f}
+.lb-rank.r2{background:rgba(192,192,192,0.15);color:#ccc}
+.lb-rank.r3{background:rgba(205,127,50,0.15);color:#cd7f32}
+.lb-rank.rn{background:rgba(255,255,255,0.05);color:var(--muted)}
+.lb-info{flex:1}
+.lb-name{font-size:15px;font-weight:700;margin-bottom:2px}
+.lb-type{font-size:12px;color:var(--muted)}
+.lb-stats{display:flex;gap:20px;align-items:center;flex-shrink:0}
+.lb-stat{text-align:center}
+.lb-stat-val{font-size:16px;font-weight:800}
+.lb-stat-label{font-size:10px;color:var(--muted)}
+.lb-score{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--gold);min-width:60px;text-align:right}
+.empty{text-align:center;padding:60px;color:var(--muted)}
+.section-title{font-size:18px;font-weight:800;margin-bottom:16px}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo">Repu<span>LV</span> <span style="font-size:13px;font-weight:500;color:var(--muted);margin-left:8px;">Leaderboard</span></div>
+  <a href="dashboard.html" class="back">← Dashboard</a>
+</div>
+<div class="main">
+  <div class="hero">
+    <div style="font-size:40px;margin-bottom:16px;">🏆</div>
+    <h1>Las Vegas <span>Reputation</span> Leaderboard</h1>
+    <p>Top rated Las Vegas businesses on RepuLV — ranked by reputation score</p>
+  </div>
+  <div id="my-rank-section"></div>
+  <div class="section-title">Top Las Vegas Businesses</div>
+  <div class="leaderboard-list" id="leaderboard-list">
+    <div class="empty">Loading leaderboard...</div>
+  </div>
+</div>
+<script>
+const API = 'https://repulv-backend-production.up.railway.app';
+const token = localStorage.getItem('repulv_token');
+if (!token) window.location.href = 'dashboard.html';
+
+async function loadLeaderboard() {
+  try {
+    const [lbRes, rankRes] = await Promise.all([
+      fetch(`${API}/leaderboard`, { headers: { 'Authorization': `Bearer ${token}` } }),
+      fetch(`${API}/leaderboard/my-rank`, { headers: { 'Authorization': `Bearer ${token}` } })
+    ]);
+    const lb = await lbRes.json();
+    const rank = await rankRes.json();
+
+    // My rank card
+    if (rank.rank) {
+      document.getElementById('my-rank-section').innerHTML = `
+        <div class="my-rank-card">
+          <div class="my-rank-left">
+            <div class="rank-badge">#${rank.rank}</div>
+            <div class="rank-info">
+              <h3>Your Current Rank</h3>
+              <p>Top ${100 - rank.percentile}% of Las Vegas businesses on RepuLV</p>
+            </div>
+          </div>
+          <div class="rank-score">
+            <div class="rank-score-num">${rank.score}</div>
+            <div class="rank-score-label">Reputation Score</div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Leaderboard
+    const list = document.getElementById('leaderboard-list');
+    if (!lb.leaderboard?.length) {
+      list.innerHTML = '<div class="empty">No businesses ranked yet — get more reviews to appear here!</div>';
+      return;
+    }
+
+    list.innerHTML = lb.leaderboard.map((b, i) => {
+      const pos = i + 1;
+      const rankClass = pos === 1 ? 'r1 top1' : pos === 2 ? 'r2 top2' : pos === 3 ? 'r3 top3' : 'rn';
+      const medal = pos === 1 ? '🥇' : pos === 2 ? '🥈' : pos === 3 ? '🥉' : pos;
+      const responseRate = b.total_reviews > 0 ? Math.round((b.responded / b.total_reviews) * 100) : 0;
+      return `
+        <div class="lb-item ${pos <= 3 ? 'top' + pos : ''}">
+          <div class="lb-rank ${rankClass}">${medal}</div>
+          <div class="lb-info">
+            <div class="lb-name">${b.name}</div>
+            <div class="lb-type">${b.type || 'Business'}</div>
+          </div>
+          <div class="lb-stats">
+            <div class="lb-stat">
+              <div class="lb-stat-val" style="color:var(--gold)">${b.avg_rating}★</div>
+              <div class="lb-stat-label">Rating</div>
+            </div>
+            <div class="lb-stat">
+              <div class="lb-stat-val">${b.total_reviews}</div>
+              <div class="lb-stat-label">Reviews</div>
+            </div>
+            <div class="lb-stat">
+              <div class="lb-stat-val" style="color:var(--green)">${responseRate}%</div>
+              <div class="lb-stat-label">Response</div>
+            </div>
+          </div>
+          <div class="lb-score">${b.reputation_score}</div>
+        </div>
+      `;
+    }).join('');
+  } catch(e) {
+    document.getElementById('leaderboard-list').innerHTML = '<div class="empty">Error loading leaderboard</div>';
+  }
+}
+
+loadLeaderboard();
+</script>
+</body>
+</html>
